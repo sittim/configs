@@ -34,7 +34,8 @@ Plugin 'terryma/vim-multiple-cursors'
 Plugin 'DoxygenToolkit.vim'
 Plugin 'edkolev/tmuxline.vim'
 Plugin 'szw/vim-ctrlspace'
-Plugin 'kien/rainbow_parentheses.vim'
+"Plugin 'kien/rainbow_parentheses.vim'
+Plugin 'oblitum/rainbow'
 Plugin 'vim-scripts/a.vim'
 Plugin 'moll/vim-bbye'
 Plugin 'christoomey/vim-tmux-navigator'
@@ -49,7 +50,7 @@ Plugin 'godlygeek/tabular'
 call vundle#end()            " required
 filetype plugin indent on    " required
 
-set ttimeoutlen=100
+set ttimeoutlen=50
 set synmaxcol=120
 set nocursorline
 set re=1
@@ -60,18 +61,23 @@ set exrc
 set secure
 set tabstop=4
 set softtabstop=4
-set shiftwidth=4
 set noexpandtab
 set colorcolumn=80
 :set cursorline
 :set t_ut=
 
+" =====[ C++ formatting ]=====================================================
+set cindent shiftwidth=4
+set cinoptions=
+set cinoptions+=l1
+set cinoptions+=(1
+set relativenumber
+
 "=====[ Indent Guidelines ]===================================================
 let g:indent_guides_auto_colors = 0
 
-
 "=====[ Remap Leader Key ]====================================================
-let mapleader = "\<Space>"
+let mapleader = ","
 
 "=====[ cycle through buffers ]===============================================
 map gn :bn<cr>
@@ -95,7 +101,7 @@ map gd :bd<cr>
 
 "=====[ Remap the Escap Key "]================================================
 :inoremap jk <Esc>
-:set timeout timeoutlen=1000 ttimeoutlen=100
+":set timeout timeoutlen=1000 ttimeoutlen=100
 
 " =====[ Syntastic Config ]===================================================
 set statusline+=%#warningmsg#
@@ -134,6 +140,7 @@ let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
 let g:ycm_key_invoke_completion = '<C-Space>'
+let g:ycm_confirm_extra_conf = 0
 
 let g:ycm_auto_trigger = 50
 let g:ycm_key_detailed_diagnostics = '<leader>d'
@@ -155,6 +162,16 @@ let g:CtrlSpaceLoadLastWorkspaceOnStart = 1
 let g:CtrlSpaceSaveWorkspaceOnSwitch = 1
 let g:CtrlSpaceSaveWorkspaceOnExit = 1
 set showtabline=0
+
+"=====[kien/rainbow_parentheses.vim]==========================================
+"au VimEnter * RainbowParenthesesToggle
+"au Syntax * RainbowParenthesesLoadRound
+"au Syntax * RainbowParenthesesLoadSquare
+"au Syntax * RainbowParenthesesLoadBraces
+
+"=====[oblitum/rainbow]=======================================================
+au FileType c,cpp,objc,objcpp call rainbow#load()
+let g:rainbow_active = 1
 
 "=====[ easy motion ]=========================================================
 " let g:EasyMotion_do_mapping = 0 " Disable default mappings
@@ -188,25 +205,34 @@ omap / <Plug>(easymotion-tn)
 let g:tmuxline_preset = 'full'
 
 " =====[ clighter ]===========================================================
-let g:clighter_libclang_file = '/usr/lib/llvm-3.6/lib/libclang.so'
-let g:clighter_compile_args = ['-isystem /usr/lib/llvm-3.6/lib/clang/3.6.0/include', '-std=c++03']
+let g:indentLine_color_tty_light = 7 " (default: 4)
+let g:indentLine_color_dark = 1 " (default: 2)
+let g:indentLine_color_term = 239
 
-"let g:clighter_compile_args = ['-isystem /usr/lib/llvm-3.6/lib/clang/3.6.0/include', '-I/home/sporty/work/c1202-f5335v2', '-std=c++03']
+" =====[ clighter ]===========================================================
+let g:clighter_compile_args = ['-isystem /usr/lib/llvm-3.6/lib/clang/3.6.0/include',
+                              \'-I/home/sporty/ws-ccs/hw_1_5/miwt-os',
+                              \'-std=c++03']
+
+
 "=====[ Confgiure the screen ]================================================
 let g:gruvbox_improved_warnings = 1
-"let g:gruvbox_improved_strings = 1
 let g:gruvbox_italic = 1
 let g:gruvbox_contrast_dark = 'hard'
-let g:rehash256 = 1
+colorscheme gruvbox
+
+"let g:rehash256 = 1
 set t_Co=256
 syntax enable
 set background=dark
- colorscheme gruvbox
-" colorscheme solarized
-" colorscheme wombat256
-" colorscheme jellybeans
-" colorscheme Sunburst
-" colorscheme molokai
+"colorscheme solarized
+"let g:solarized_italic=1
+"let g:solarized_underline=1
+"let g:solarized_bold=1
+
+"colorscheme wombat256
+"colorscheme jellybeans
+"colorscheme molokai
 
 "=====[ Configure Airline ]===================================================
 set laststatus=2
@@ -215,18 +241,6 @@ set number
 syntax on
 set tags=tags;
 set expandtab
-
-"=====[ binding of <c-s> to save a buffer ]===================================
-" If the current buffer has never been saved, it will have no name,
-" call the file browser to save it, otherwise just save it.
-command -nargs=0 -bar Update if &modified
-                           \|    if empty(bufname('%'))
-                           \|        browse confirm write
-                           \|    else
-                           \|        confirm write
-                           \|    endif
-                           \|endif
-nnoremap <silent> <C-s> :<C-u>Update<CR>
 
 nnoremap <F4> :wa <bar> :make!<cr>
 nnoremap <F8> :NERDTreeToggle<CR>
@@ -248,6 +262,7 @@ augroup BgHighlight
                                \|map <buffer> <c-n> <down>
 
     autocmd GuiEnter * set background&
+    
     "=====[ makefile binding ]================================================
     autocmd  BufRead,BufNewFile  *.cpp
         \ let &l:makeprg
@@ -258,8 +273,4 @@ augroup END
 nnoremap <silent> ]<Space> :<C-u>put =repeat(nr2char(10),v:count)<Bar>execute"'[-1"<CR>
 nnoremap <silent> [<Space> :<C-u>put!=repeat(nr2char(10),v:count)<Bar>execute"']+1"<CR>
 
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
 

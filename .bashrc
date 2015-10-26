@@ -102,9 +102,9 @@ export PATH=$PATH:/usr/local/go/bin
 export GOPATH="/home/sporty/go"
 export PATH=$PATH:$GOPATH/bin
 
-#if [ "$TERM" = "xterm" ]; then
-    #export TERM=xterm-256color
-#fi
+if [ "$TERM" = "xterm" ]; then
+    export TERM=xterm-256color
+fi
 
 # tmux configuration
 tmux attach &> /dev/null
@@ -113,7 +113,7 @@ tmux attach &> /dev/null
 export EDITOR=vim
 
 # clang directories
-export PATH=$PATH:/usr/lib/llvm-2.6/bin/:/usr/lib/llvm-3.6/lib:/usr/local/bin:/usr/local/lib:/home/sporty/MSP430Flasher_1.3.7
+export PATH=$PATH:/usr/lib/llvm-3.6/lib:/usr/local/bin:/usr/local/lib:/home/sporty/MSP430Flasher_1.3.7
 
 # Disable C-s to allow save to work in vim.
 bind -r '\C-s'
