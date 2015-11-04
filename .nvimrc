@@ -29,7 +29,6 @@ Plugin 'Lokaltog/vim-easymotion'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'Raimondi/delimitMate'
 Plugin 'tomasr/molokai'
-Plugin 'flazz/vim-colorschemes'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'DoxygenToolkit.vim'
 Plugin 'edkolev/tmuxline.vim'
@@ -73,8 +72,12 @@ set cinoptions+=l1
 set cinoptions+=(1
 set relativenumber
 
+"=====[ Format Options ]======================================================
+set formatoptions=tcq
+
 "=====[ Indent Guidelines ]===================================================
 let g:indent_guides_auto_colors = 0
+let g:indentLine_color_term = 239
 
 "=====[ Remap Leader Key ]====================================================
 let mapleader = ","
@@ -142,7 +145,7 @@ let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
 let g:ycm_key_invoke_completion = '<C-Space>'
 let g:ycm_confirm_extra_conf = 0
 
-let g:ycm_auto_trigger = 50
+let g:ycm_auto_trigger = 1
 let g:ycm_key_detailed_diagnostics = '<leader>d'
 let g:ycm_filepath_completion_use_working_dir = 1
 nnoremap <leader>jd :YcmCompleter GoTo<CR>
@@ -207,7 +210,7 @@ let g:tmuxline_preset = 'full'
 " =====[ clighter ]===========================================================
 let g:indentLine_color_tty_light = 7 " (default: 4)
 let g:indentLine_color_dark = 1 " (default: 2)
-let g:indentLine_color_term = 239
+"let g:indentLine_color_term = 239
 
 " =====[ clighter ]===========================================================
 let g:clighter_compile_args = ['-isystem /usr/lib/llvm-3.6/lib/clang/3.6.0/include',
@@ -216,19 +219,20 @@ let g:clighter_compile_args = ['-isystem /usr/lib/llvm-3.6/lib/clang/3.6.0/inclu
 
 
 "=====[ Confgiure the screen ]================================================
-let g:gruvbox_improved_warnings = 1
-let g:gruvbox_italic = 1
-let g:gruvbox_contrast_dark = 'hard'
-colorscheme gruvbox
+"let g:gruvbox_improved_warnings = 1
+"let g:gruvbox_italic = 1
+"let g:gruvbox_contrast_dark = 'hard'
+"colorscheme gruvbox
 
 "let g:rehash256 = 1
 set t_Co=256
 syntax enable
+"set background=light
 set background=dark
-"colorscheme solarized
-"let g:solarized_italic=1
-"let g:solarized_underline=1
-"let g:solarized_bold=1
+colorscheme solarized
+let g:solarized_italic=1
+let g:solarized_underline=1
+let g:solarized_bold=1
 
 "colorscheme wombat256
 "colorscheme jellybeans
