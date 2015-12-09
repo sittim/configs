@@ -113,7 +113,7 @@ tmux attach &> /dev/null
 export EDITOR=vim
 
 # clang directories
-export PATH=$PATH:/usr/lib/llvm-3.6/lib:/usr/local/bin:/usr/local/lib:/home/sporty/MSP430Flasher_1.3.7
+export PATH=$PATH:/usr/lib/llvm-3.6/lib:/usr/lib/llvm-3.7/lib:/usr/local/bin:/usr/local/lib:/home/sporty/MSP430Flasher_1.3.7
 
 # Disable C-s to allow save to work in vim.
 bind -r '\C-s'

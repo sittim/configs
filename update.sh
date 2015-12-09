@@ -5,3 +5,4 @@ cp ~/.nvimrc .
 cp ~/.xinitrc .
 cp ~/.Xresources .
 cp -r ~/.i3/config ~/configs/.i3/
+cp ~/.spacemacs .

@@ -1,53 +1,54 @@
-" Bundle Vundle configurations
-set nocompatible              " be iMproved, required
-filetype off                  " required
+call plug#begin('~/.config/nvim/plugged')
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+Plug 'Yggdroot/indentLine'
+Plug 'fatih/vim-go',             {'for': 'go'}
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-markdown'
+Plug 'tpope/vim-surround'
+Plug 'Valloric/YouCompleteMe', {'do': './install.py --clang-completer'}
+"Plug 'scrooloose/syntastic'
+" --------------- neomake --------------------
+"Plug 'benekastah/neomake'
+"Plug 'justmao945/vim-clang'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+Plug 'bling/vim-airline'
+Plug 'altercation/vim-colors-solarized'
+Plug 'morhetz/gruvbox'
+Plug 'kopischke/unite-spell-suggest'
+Plug 'scrooloose/nerdcommenter'
+" ---------------  Nurdtree -------------------
+Plug 'scrooloose/nerdtree',            { 'on': 'NERDTreeToggle' }
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'Lokaltog/vim-easymotion'
+Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'Raimondi/delimitMate'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'DoxygenToolkit.vim'
+Plug 'edkolev/tmuxline.vim'
+Plug 'szw/vim-ctrlspace'
+Plug 'oblitum/rainbow'
+Plug 'vim-scripts/a.vim'
+Plug 'moll/vim-bbye'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'bbchung/clighter'
+Plug 'ludovicchabant/vim-gutentags'
+Plug 'troydm/zoomwintab.vim'
+Plug 'godlygeek/tabular'
+"Plug 'plasticboy/vim -markdown'
+Plug 'ntpeters/vim-airline-colornum'
+"Plugin 'godlygeek/tabular'
+"Plugin 'plasticboy/vim-markdown'
+"function! BuildComposer(info)
+  "if a:info.status != 'unchanged' || a:info.force
+    "!cargo build --release
+    "UpdateRemotePlugins
+  "endif
+"endfunction
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'Yggdroot/indentLine'
-Plugin 'fatih/vim-go'
-Plugin 'tpope/vim-fugitive'
-"Plugin 'Valloric/YouCompleteMe'
-Plugin 'oblitum/YouCompleteMe' , { 'do': './install.py --clang-completer' }
-Plugin 'scrooloose/syntastic'
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
-Plugin 'bling/vim-airline'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'morhetz/gruvbox'
-Plugin 'tpope/vim-markdown'
-Plugin 'kopischke/unite-spell-suggest'
-Plugin 'tpope/vim-surround'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'Lokaltog/vim-easymotion'
-Plugin 'octol/vim-cpp-enhanced-highlight'
-Plugin 'Raimondi/delimitMate'
-Plugin 'tomasr/molokai'
-Plugin 'terryma/vim-multiple-cursors'
-Plugin 'DoxygenToolkit.vim'
-Plugin 'edkolev/tmuxline.vim'
-Plugin 'szw/vim-ctrlspace'
-"Plugin 'kien/rainbow_parentheses.vim'
-Plugin 'oblitum/rainbow'
-Plugin 'vim-scripts/a.vim'
-Plugin 'moll/vim-bbye'
-Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'scrooloose/nerdtree'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'bbchung/clighter'
-Plugin 'ludovicchabant/vim-gutentags'
-Plugin 'troydm/zoomwintab.vim'
-Plugin 'godlygeek/tabular'
+"Plug 'euclio/vim-markdown-composer', { 'do': function('BuildComposer') }
 
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
+call plug#end()
 
 set ttimeoutlen=50
 set synmaxcol=120
@@ -77,7 +78,7 @@ set formatoptions=tcq
 
 "=====[ Indent Guidelines ]===================================================
 let g:indent_guides_auto_colors = 0
-let g:indentLine_color_term = 239
+"let g:indentLine_color_term = 239
 
 "=====[ Remap Leader Key ]====================================================
 let mapleader = ","
@@ -107,23 +108,45 @@ map gd :bd<cr>
 ":set timeout timeoutlen=1000 ttimeoutlen=100
 
 " =====[ Syntastic Config ]===================================================
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_cpp_checkers = ['clang_check', 'cpplint']
-let g:syntastic_c_checkers = ['cpplint']
-let g:syntastic_cpp_compiler = 'clang++'
-let g:syntastic_cpp_compiler_options = ' -std=c++03 -stdlib=libc++'
-let g:syntastic_shell = "/bin/sh"
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
+"let g:syntastic_cpp_checkers = ['clang_check', 'cpplint', 'clang_tidy']
+"let g:syntastic_c_checkers = ['cpplint']
+"let g:syntastic_cpp_compiler = 'clang++'
+"let g:syntastic_cpp_compiler_options = ' -std=c++03 -stdlib=libc++'
+"let g:syntastic_shell = "/bin/sh"
+
+" =====[ Neomake Config ]=====================================================
+"let g:neomake_cpp_clang_maker = {
+    "\ 'args': ['-fsyntax-only','-std=c++03','-stdlib=libc++','-Wall', '-Wextra',
+    "\          '-I/home/sporty/ws-ccs/hw_1_5/miwt-os',
+    "\          '-I/home/sporty/ws-ccs/hw_1_5']
+    "\}
+"let g:neomake_cpp_clang_maker = {
+    "\ 'args': ['-fsyntax-only','-std=c++03','-Wall','-Wextra',
+    "\          '-Imiwt-os',
+    "\          '-isystem/home/sporty/work/googletest/googletest/include',
+    "\          '-isystem/home/sporty/work/googletest/googlemock/include' ]
+    "\}
+"let g:neomake_cpp_enabled_makers = ['clang']
+
+"autocmd! BufWritePost * Neomake 
+
+"=====[clang complete]========================================================
+"let g:clang_cpp_options = '-std=c++03 -stdlib=libc++'
+"let g:clang_vim_exec = 'nvim'
 
 "=====[ airline configuration ]===============================================
 let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 0
 let g:airline_exclude_preview = 1
+"let g:AirlineTheme=solarized
 
 "=====[ ultisnips ]===========================================================
 " Trigger configuration. Do not use <tab> if you use
@@ -138,18 +161,19 @@ let g:cpp_experimental_template_highlight = 1
 
 "=====[ YouCompleteMe Configurations ]========================================
 " let g:ycm_min_num_of_chars_for_completion = 99
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_autoclose_preview_window_after_insertion = 1
+"let g:ycm_autoclose_preview_window_after_completion = 1
+"let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
 let g:ycm_key_invoke_completion = '<C-Space>'
-let g:ycm_confirm_extra_conf = 0
+"let g:ycm_confirm_extra_conf = 0
 
 let g:ycm_auto_trigger = 1
 let g:ycm_key_detailed_diagnostics = '<leader>d'
 let g:ycm_filepath_completion_use_working_dir = 1
 nnoremap <leader>jd :YcmCompleter GoTo<CR>
 nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
+"let g:ycm_show_diagnostics_ui = 0
 
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip
 
@@ -166,24 +190,18 @@ let g:CtrlSpaceSaveWorkspaceOnSwitch = 1
 let g:CtrlSpaceSaveWorkspaceOnExit = 1
 set showtabline=0
 
-"=====[kien/rainbow_parentheses.vim]==========================================
-"au VimEnter * RainbowParenthesesToggle
-"au Syntax * RainbowParenthesesLoadRound
-"au Syntax * RainbowParenthesesLoadSquare
-"au Syntax * RainbowParenthesesLoadBraces
-
 "=====[oblitum/rainbow]=======================================================
 au FileType c,cpp,objc,objcpp call rainbow#load()
 let g:rainbow_active = 1
 
 "=====[ easy motion ]=========================================================
-" let g:EasyMotion_do_mapping = 0 " Disable default mappings
+"let g:EasyMotion_do_mapping = 0 " Disable default mappings
 
 " Bi-directional find motion
 " Jump to anywhere you want with minimal keystrokes, with just one key
 " binding.
 " `s{char}{label}`
-nmap s <Plug>(easymotion-s)
+"nmap s <Plug>(easymotion-s)
 " or
 " `s{char}{char}{label}`
 " Need one more keystroke, but on average, it may be more comfortable.
@@ -193,54 +211,56 @@ nmap s <Plug>(easymotion-s2)
 let g:EasyMotion_smartcase = 1
 
 " JK motions: Line motions
-map <Leader>l <Plug>(easymotion-lineforward)
-map <Leader>u <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
-map <Leader>h <Plug>(easymotion-uinebackward)
+nmap <Leader>l <Plug>(easymotion-lineforward)
+nmap <Leader>j <Plug>(easymotion-j)
+nmap <Leader>k <Plug>(easymotion-k)
+nmap <Leader>h <Plug>(easymotion-linebackward)
 
 map <Leader> <Plug>(easymotion-prefix)
 
 " Gif config
 map  / <Plug>(easymotion-sn)
 omap / <Plug>(easymotion-tn)
+"let g:EasyMotion_inc_highlight=0
+"let g:EasyMotion_move_highlight = 0
+"let g:EasyMotion_landing_highlight = 0
+nnoremap <leader>nh :nohlsearch<CR>
 
 "=====[ tmux line configuration ]=============================================
 let g:tmuxline_preset = 'full'
 
-" =====[ clighter ]===========================================================
-let g:indentLine_color_tty_light = 7 " (default: 4)
-let g:indentLine_color_dark = 1 " (default: 2)
+" =====[ indent line ]========================================================
+"let g:indentLine_color_tty_light = 7 " (default: 4)
+"let g:indentLine_color_dark = 1 " (default: 2)
 "let g:indentLine_color_term = 239
 
 " =====[ clighter ]===========================================================
-let g:clighter_compile_args = ['-isystem /usr/lib/llvm-3.6/lib/clang/3.6.0/include',
-                              \'-I/home/sporty/ws-ccs/hw_1_5/miwt-os',
-                              \'-std=c++03']
-
-
+"let g:clighter_compile_args = ['-isystem /usr/lib/llvm-3.6/lib/clang/3.6.0/include',
+                              "\'-I/home/sporty/ws-ccs/hw_1_5/miwt-os',
+                              "\'-std=c++03']
+"let g:clighter_cursor_hl_mode=1
+let g:clighter_highlight_mode=0
 "=====[ Confgiure the screen ]================================================
+" Generic Cofiguration
+syntax enable
+"set t_Co=256
+"let g:rehash256 = 1
+
+" --- gruvbox
 "let g:gruvbox_improved_warnings = 1
 "let g:gruvbox_italic = 1
 "let g:gruvbox_contrast_dark = 'hard'
 "colorscheme gruvbox
 
-"let g:rehash256 = 1
-set t_Co=256
-syntax enable
-"set background=light
-set background=dark
-colorscheme solarized
+" --- solarized
 let g:solarized_italic=1
 let g:solarized_underline=1
 let g:solarized_bold=1
+set background=light
+"set background=dark
+colorscheme solarized
 
-"colorscheme wombat256
-"colorscheme jellybeans
-"colorscheme molokai
-
-"=====[ Configure Airline ]===================================================
 set laststatus=2
-let g:airline_powerline_fonts = 1
 set number
 syntax on
 set tags=tags;
@@ -257,6 +277,7 @@ augroup BgHighlight
     autocmd WinEnter * set cul
     autocmd WinLeave * set nocul
 
+
     "=====[ Indent Guidelines ]===============================================
     autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
     autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
@@ -265,7 +286,7 @@ augroup BgHighlight
                                \|map <buffer> <c-p> <up>
                                \|map <buffer> <c-n> <down>
 
-    autocmd GuiEnter * set background&
+    "set background&
     
     "=====[ makefile binding ]================================================
     autocmd  BufRead,BufNewFile  *.cpp
@@ -274,7 +295,6 @@ augroup BgHighlight
             \substitute(expand('%'), '\m_test\.cpp$', '.makefile', ''))
 augroup END
 
-nnoremap <silent> ]<Space> :<C-u>put =repeat(nr2char(10),v:count)<Bar>execute"'[-1"<CR>
-nnoremap <silent> [<Space> :<C-u>put!=repeat(nr2char(10),v:count)<Bar>execute"']+1"<CR>
-
+nnoremap <silent> ]<Space> :<C-u>put =repeat(nr2char(10),v:count)<Bar>execute "'[-1"<CR>
+nnoremap <silent> [<Space> :<C-u>put!=repeat(nr2char(10),v:count)<Bar>execute "']+1"<CR>
 
