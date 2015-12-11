@@ -10,9 +10,9 @@ Plug 'Valloric/YouCompleteMe', {'do': './install.py --clang-completer'}
 " --------------- neomake --------------------
 "Plug 'benekastah/neomake'
 "Plug 'justmao945/vim-clang'
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
+Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'bling/vim-airline'
+"Plug 'ntpeters/vim-airline-colornum'
 Plug 'altercation/vim-colors-solarized'
 Plug 'morhetz/gruvbox'
 Plug 'kopischke/unite-spell-suggest'
@@ -35,7 +35,6 @@ Plug 'bbchung/clighter'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'troydm/zoomwintab.vim'
 Plug 'godlygeek/tabular'
-Plug 'ntpeters/vim-airline-colornum'
 
 "Plugin 'godlygeek/tabular'
 "Plugin 'plasticboy/vim-markdown'
@@ -52,9 +51,9 @@ call plug#end()
 
 set ttimeoutlen=50
 set synmaxcol=120
-set nocursorline
-set re=1
-:redraw
+"set nocursorline
+"set re=1
+":redraw
 
 " Configure for C++ Development
 set exrc
@@ -149,8 +148,6 @@ let g:airline_exclude_preview = 1
 "let g:AirlineTheme=solarized
 
 "=====[ ultisnips ]===========================================================
-" Trigger configuration. Do not use <tab> if you use
-" https://github.com/Valloric/YouCompleteMe.
 let g:UltiSnipsExpandTrigger="<c-e>"
 let g:UltiSnipsJumpForwardTrigger="<c-a>"
 let g:UltiSnipsJumpBackwardTrigger="<c-b>"
@@ -257,8 +254,8 @@ syntax enable
 let g:solarized_italic=1
 let g:solarized_underline=1
 let g:solarized_bold=1
-"set background=light
-set background=dark
+set background=light
+"set background=dark
 colorscheme solarized
 
 set laststatus=2
