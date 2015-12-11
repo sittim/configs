@@ -1,7 +1,7 @@
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'Yggdroot/indentLine'
-Plug 'fatih/vim-go',             {'for': 'go'}
+"Plug 'fatih/vim-go',             {'for': 'go'}
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-surround'
@@ -35,8 +35,8 @@ Plug 'bbchung/clighter'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'troydm/zoomwintab.vim'
 Plug 'godlygeek/tabular'
-"Plug 'plasticboy/vim -markdown'
 Plug 'ntpeters/vim-airline-colornum'
+
 "Plugin 'godlygeek/tabular'
 "Plugin 'plasticboy/vim-markdown'
 "function! BuildComposer(info)
@@ -152,8 +152,9 @@ let g:airline_exclude_preview = 1
 " Trigger configuration. Do not use <tab> if you use
 " https://github.com/Valloric/YouCompleteMe.
 let g:UltiSnipsExpandTrigger="<c-e>"
-let g:UltiSnipsJumpForwardTrigger="<c-c>"
-let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+let g:UltiSnipsJumpForwardTrigger="<c-a>"
+let g:UltiSnipsJumpBackwardTrigger="<c-b>"
+let g:UltiSnipsSnippetsDir="~/.nvim/UltiSnips"
 
 "=====[ vim-cpp-enhanced-highlight ]==========================================
 let g:cpp_class_scope_highlight = 1
@@ -256,8 +257,8 @@ syntax enable
 let g:solarized_italic=1
 let g:solarized_underline=1
 let g:solarized_bold=1
-set background=light
-"set background=dark
+"set background=light
+set background=dark
 colorscheme solarized
 
 set laststatus=2

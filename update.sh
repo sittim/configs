@@ -1,5 +1,6 @@
 cp ~/.bashrc .
 cp ~/.nvimrc .
+cp ~/.vimrc .
 cp ~/.tmux.conf .
 cp ~/.nvimrc .
 cp ~/.xinitrc .
