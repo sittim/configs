@@ -44,7 +44,8 @@ let g:gruvbox_improved_warnings = 1
 let g:gruvbox_italic = 1
 let g:gruvbox_contrast_dark = 'hard'
 colorscheme gruvbox
-set background=dark
+" set background=dark
+set background=light
 
 "=====[ ultisnips ]===========================================================
 let g:UltiSnipsExpandTrigger="<c-e>"

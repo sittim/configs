@@ -70,22 +70,11 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
-alias us='ssh -X -l sporty -p 2222 localhost'
-
-#=============[ Disable / Enable touch pad ]==================================
-alias tpoff='synclient TouchpadOff=1'
-alias tpon='synclient TouchpadOff=0'
-
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
@@ -113,8 +102,6 @@ tmux attach &> /dev/null
 export EDITOR=vim
 
 # clang directories
-export PATH=$PATH:/usr/lib/llvm-3.6/lib:/usr/lib/llvm-3.7/lib:/usr/local/bin:/usr/local/lib:/home/sporty/MSP430Flasher_1.3.7
+export PATH=$PATH:/usr/lib/llvm-3.7/lib:/usr/local/bin:/usr/local/lib:/home/sporty/MSP430Flasher_1.3.7
 
-# Disable C-s to allow save to work in vim.
-bind -r '\C-s'
 stty -ixon
