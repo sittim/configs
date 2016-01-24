@@ -105,3 +105,5 @@ export EDITOR=vim
 export PATH=$PATH:/usr/lib/llvm-3.7/lib:/usr/local/bin:/usr/local/lib:/home/sporty/MSP430Flasher_1.3.7
 
 stty -ixon
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

@@ -29,6 +29,11 @@ Plug 'godlygeek/tabular'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'rking/ag.vim'
 Plug 'nelstrom/vim-qargs'
+Plug 'jaxbot/github-issues.vim'
+Plug 'Shougo/neocomplete.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'mhartington/oceanic-next'
 
 call plug#end()
 
@@ -41,6 +46,8 @@ set re=1
 "set lazyredraw
 ":redraw
 
+set encoding=utf8
+
 " Configure for C++ Development
 set exrc
 set secure
@@ -50,6 +57,16 @@ set noexpandtab
 set colorcolumn=80
 :set cursorline
 :set t_ut=
+
+"=====[ Set Cursor ]========================================================
+" use an orange cursor in insert mode
+let &t_SI = "\<Esc>]12;orange\x7"
+" use a red cursor otherwise
+let &t_EI = "\<Esc>]12;red\x7"
+silent !echo -ne "\033]12;red\007"
+" reset cursor when vim exits
+autocmd VimLeave * silent !echo -ne "\033]112\007"
+" use \003]12;gray\007 for gnome-terminal
 
 "=====[ vim-markdown ]========================================================
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
@@ -100,6 +117,7 @@ let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
 set wildignore+=*.so,*.swp,*.zip,*.o,*.a,*_test
 let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+let g:ctrlp_switch_buffer=0
 
 " =====[ Neomake Config ]=====================================================
 "let g:neomake_cpp_clang_maker = {
@@ -118,16 +136,12 @@ let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclu
 "autocmd! BufWritePost * Neomake 
 
 "=====[ airline configuration ]===============================================
-let g:airline#extensions#tabline#enabled = 1
-let g:airline_powerline_fonts = 0
-let g:airline_exclude_preview = 1
-"let g:AirlineTheme=solarized
+let g:airline_powerline_fonts = 1
 
 "=====[ ultisnips ]===========================================================
 let g:UltiSnipsExpandTrigger="<c-e>"
 let g:UltiSnipsJumpForwardTrigger="<c-a>"
 let g:UltiSnipsJumpBackwardTrigger="<c-b>"
-let g:UltiSnipsSnippetsDir="~/.nvim/UltiSnips"
 
 "=====[ vim-cpp-enhanced-highlight ]==========================================
 let g:cpp_class_scope_highlight = 1
@@ -175,23 +189,30 @@ let g:tmuxline_preset = 'full'
 "=====[ Confgiure the screen ]================================================
 " Generic Cofiguration
 syntax enable
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 " --- gruvbox
-let g:gruvbox_improved_warnings = 1
-let g:gruvbox_italic = 1
-let g:gruvbox_contrast_dark = 'hard'
+"let g:gruvbox_improved_warnings = 1
+"let g:gruvbox_italic = 1
+"let g:gruvbox_contrast_dark = 'hard'
 "colorscheme gruvbox
 "
 " --- solarized
-let g:solarized_italic=1
-let g:solarized_underline=1
-let g:solarized_bold=1
-let g:solarized_visibility= "high"
+"let g:solarized_italic=1
+"let g:solarized_underline=1
+"let g:solarized_bold=1
+"let g:solarized_visibility= "high"
+"set background=dark
+"colorscheme solarized
+"call togglebg#map("<F3>")
+
 set background=dark
-colorscheme solarized
-call togglebg#map("<F3>")
+colorscheme OceanicNext
 
 "=====[ Generic Configurations ]================================================
+map <C-K> :pyf /usr/share/vim/addons/syntax/clang-format-3.7.py<cr>
+map <C-K> <c-o>:pyf /usr/share/vim/addons/syntax/clang-format-3.7.py<cr>
+
 set laststatus=2
 set number
 set tags=tags;

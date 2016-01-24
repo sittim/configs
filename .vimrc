@@ -9,21 +9,29 @@ Plug 'tpope/vim-surround'
 Plug 'scrooloose/nerdcommenter'
 Plug 'morhetz/gruvbox'
 Plug 'Lokaltog/vim-easymotion'
+Plug 'freitass/todo.txt-vim'
+Plug 'lukaszkorecki/workflowish'
 
 call plug#end()
 
 syntax enable
 :inoremap jk <Esc>
 let mapleader = ","
-
+let maplocalleader = "\\"
+:set number
 :set laststatus=2
+
+" =====[ GVIM GUI setup ]====================================
+:set guioptions-=m  "remove menu bar
+:set guioptions-=T  "remove toolbar
+:set guioptions-=r  "remove right-hand scroll bar
+:set guioptions-=L  "remove left-hand scroll bar
 
 " =====[ Remap to change windows quickly ]====================================
 :nmap <silent> <C-H> :wincmd h<CR>
 :nmap <silent> <C-J> :wincmd j<CR>
 :nmap <silent> <C-K> :wincmd k<CR>
 :nmap <silent> <C-L> :wincmd l<CR>
-
 
 "=====[ easy motion ]=========================================================
 nmap s <Plug>(easymotion-s2)
@@ -52,3 +60,8 @@ let g:UltiSnipsExpandTrigger="<c-e>"
 let g:UltiSnipsJumpForwardTrigger="<c-a>"
 let g:UltiSnipsJumpBackwardTrigger="<c-b>"
 let g:UltiSnipsSnippetsDir="~/.nvim/UltiSnips"
+
+"=====[ workflowish ]===========================================================
+autocmd BufWinLeave *.wofl mkview
+autocmd BufWinEnter *.wofl silent loadview
+
