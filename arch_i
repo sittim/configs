@@ -1,0 +1,81 @@
+#!/usr/bin/env sh
+# https://raw.githubusercontent.com/sittim/arch/master/inst 
+
+HOST="sputnik"        # Set host name here
+USER="sporty"         # Set user name here
+DISK="/dev/sda"            # choose disk (Use lsblk to see list of available disks)
+TIMEZONE="America/Kentucky/Louisville"  #to choose use 
+
+uefi_partitioning() {
+    parted -a optimal -- "$DISK" mkpart ESP fat32 1MiB 512MiB set 1 boot on
+    parted -a optimal -- "$DISK" mkpart primary ext4 512MiB 100%
+
+    mkfs.fat -F32 "${DISK}1"
+    mkfs.ext4 "${DISK}2"
+
+    mount "${DISK}2" /mnt
+    mkdir -p /mnt/boot
+    mount "${DISK}1" /mnt/boot
+}
+
+base_system() {
+    URL="archlinux.org/mirrorlist/?country=US&use_mirror_status=on"
+    curl -sL "$URL" | sed 's/#Server/Server/' > /etc/pacman.d/mirrorlist
+    pacstrap /mnt base base-devel
+    genfstab -U -p /mnt >> /mnt/etc/fstab
+}
+
+local_information() {
+    echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
+    arch-chroot /mnt locale-gen
+
+    ln -s "/usr/share/zoneinfo/$TIMEZONE" /mnt/etc/localtime
+    arch-chroot /mnt hwclock --systohc --utc
+
+    echo "$HOST" > /mnt/etc/hostname
+
+    echo "Password for superuser:"
+    arch-chroot /mnt passwd
+
+    arch-chroot /mnt useradd -m -g users -G wheel "$USER"
+    echo "Password for $USER:"
+    arch-chroot /mnt passwd "$USER"
+    sed -i "0,/# %w/s/# %w/%w/" /mnt/etc/sudoers
+}
+
+uefi_bootloader() {
+    PARTID="$(blkid | grep "${DISK}2" | cut -d\" -f6)"
+    bootctl --path=/mnt/boot install
+    cat > /mnt/boot/loader/entries/arch.conf <<-EOF
+        title       Arch Linux
+        linux       /vmlinuz-linux
+        initrd      /initramfs-linux.img
+        options     root=PARTUUID=$PARTID rw quiet splash
+EOF
+}
+
+install_software() {
+    arch-chroot /mnt pacman -S virtualbox-guest-utils
+    arch-chroot /mnt pacman -S neovim
+    echo "vboxguest\nvboxsf\nvboxvideo" >> /etc/modules-load.d/virtualbox.conf
+}
+
+set -o xtrace
+
+parted -s /dev/sda rm 1
+parted -s /dev/sda rm 2
+
+read -p "Hit Enter to Begin Partitioning..."
+uefi_partitioning
+
+read -p "Hit Enter to Install Base System..."
+base_system
+
+read -p "Hit Enter to add local information..."
+local_information
+
+read -p "Hit Enter to install bootloader..."
+uefi_bootloader
+
+read -p "Hit Enter to install software..."
+install_software

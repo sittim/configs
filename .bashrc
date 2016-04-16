@@ -102,8 +102,12 @@ tmux attach &> /dev/null
 export EDITOR=vim
 
 # clang directories
-export PATH=$PATH:/usr/lib/llvm-3.7/lib:/usr/local/bin:/usr/local/lib:/home/sporty/MSP430Flasher_1.3.7
+export PATH=$PATH:/usr/lib/llvm-3.7/lib:/usr/local/bin:/usr/local/lib:/home/sporty/MSPFlasher:/usr/lib/llvm-3.7/bin
 
 stty -ixon
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+# Homework 2 specific stuff
+export LD_LIBRARY_PATH=/home/sporty/Android/Sdk/tools/lib64
+
