@@ -43,6 +43,14 @@ local_information() {
     sed -i "0,/# %w/s/# %w/%w/" /mnt/etc/sudoers
 }
 
+install_software() {
+    arch-chroot /mnt pacman -S virtualbox-guest-utils
+    arch-chroot /mnt pacman -S neovim
+    echo "vboxguest\nvboxsf\nvboxvideo" >> /etc/modules-load.d/virtualbox.conf
+    mkdir /home/sporty/.config/nvim
+    curl https://github.com/sittim/configs/blob/master/simple_init.vim > /home/sporty/.config/nvim/init.vim
+}
+
 uefi_bootloader() {
     PARTID="$(blkid | grep "${DISK}2" | cut -d\" -f6)"
     bootctl --path=/mnt/boot install
@@ -52,12 +60,6 @@ uefi_bootloader() {
         initrd      /initramfs-linux.img
         options     root=PARTUUID=$PARTID rw quiet splash
 EOF
-}
-
-install_software() {
-    arch-chroot /mnt pacman -S virtualbox-guest-utils
-    arch-chroot /mnt pacman -S neovim
-    echo "vboxguest\nvboxsf\nvboxvideo" >> /etc/modules-load.d/virtualbox.conf
 }
 
 set -o xtrace
@@ -74,8 +76,9 @@ base_system
 read -p "Hit Enter to add local information..."
 local_information
 
+read -p "Hit Enter to install software..."
+install_software
+
 read -p "Hit Enter to install bootloader..."
 uefi_bootloader
 
-read -p "Hit Enter to install software..."
-install_software
