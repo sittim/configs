@@ -21,7 +21,7 @@ uefi_partitioning() {
 base_system() {
     URL="archlinux.org/mirrorlist/?country=US&use_mirror_status=on"
     curl -sL "$URL" | sed 's/#Server/Server/' > /etc/pacman.d/mirrorlist
-    pacman -Sy
+
     pacstrap /mnt $(pacman -Sqg base | sed 's/^linux$/&-lts/') 
     genfstab -U -p /mnt >> /mnt/etc/fstab
 }
@@ -44,15 +44,6 @@ local_information() {
     sed -i "0,/# %w/s/# %w/%w/" /mnt/etc/sudoers
 }
 
-install_software() {
-    arch-chroot /mnt /bin/bash
-    pacman -S virtualbox-guest-utils
-    pacman -S neovim
-    echo "vboxguest\nvboxsf\nvboxvideo" >> /etc/modules-load.d/virtualbox.conf
-    mkdir /usr/share/nvim
-    curl https://raw.githubusercontent.com/sittim/configs/master/simple_init.vim > /usr/share/nvim/sysinit.vim
-}
-
 uefi_bootloader() {
     PARTID="$(blkid | grep "${DISK}1" | cut -d\" -f6)"
     bootctl --path=/mnt/boot install
@@ -62,6 +53,14 @@ uefi_bootloader() {
         initrd      /initramfs-linux.img
         options     root=PARTUUID=$PARTID rw quiet splash
 EOF
+}
+
+install_software() {
+    arch-chroot /mnt pacman -S virtualbox-guest-utils
+    arch-chroot /mnt pacman -S neovim
+    echo "vboxguest\nvboxsf\nvboxvideo" > /etc/modules-load.d/virtualbox.conf
+    mkdir /usr/share/nvim
+    curl https://raw.githubusercontent.com/sittim/configs/master/simple_init.vim > /usr/share/nvim/sysinit.vim
 }
 
 set -o xtrace
