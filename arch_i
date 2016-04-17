@@ -22,7 +22,9 @@ base_system() {
     URL="archlinux.org/mirrorlist/?country=US&use_mirror_status=on"
     curl -sL "$URL" | sed 's/#Server/Server/' > /etc/pacman.d/mirrorlist
 
+    pacman -Sy
     pacstrap /mnt $(pacman -Sqg base | sed 's/^linux$/&-lts/') 
+
     genfstab -U -p /mnt >> /mnt/etc/fstab
 }
 
