@@ -22,10 +22,9 @@ base_system() {
     URL="archlinux.org/mirrorlist/?country=US&use_mirror_status=on"
     curl -sL "$URL" | sed 's/#Server/Server/' > /etc/pacman.d/mirrorlist
 
-    # pacman -Sy
-    # pacstrap /mnt $(pacman -Sqg base | sed 's/^linux$/&-lts/') 
-    pacstrap /mnt base
-
+    pacman -Sy
+    pacstrap /mnt $(pacman -Sqg base | sed 's/^linux$/&-lts/') 
+    # pacstrap /mnt base
     genfstab -U -p /mnt >> /mnt/etc/fstab
 }
 
@@ -50,9 +49,9 @@ local_information() {
 install_software() {
     arch-chroot /mnt pacman -S virtualbox-guest-utils
     arch-chroot /mnt pacman -S neovim
-    echo "vboxguest\nvboxsf\nvboxvideo" > /etc/modules-load.d/virtualbox.conf
-    mkdir /usr/share/nvim
-    curl https://raw.githubusercontent.com/sittim/configs/master/simple_init.vim > /usr/share/nvim/sysinit.vim
+    echo "vboxguest\nvboxsf\nvboxvideo" > /mnt/etc/modules-load.d/virtualbox.conf
+    mkdir /mnt/usr/share/nvim
+    curl https://raw.githubusercontent.com/sittim/configs/master/simple_init.vim > /mnt/usr/share/nvim/sysinit.vim
 }
 
 uefi_bootloader() {
