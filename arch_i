@@ -44,11 +44,11 @@ local_information() {
 }
 
 install_software() {
-    arch-chroot /mnt pacman -S -nonconfirm virtualbox-guest-utils
-    arch-chroot /mnt pacman -S -nonconfirm neovim
-    arch-chroot /mnt echo "vboxguest\nvboxsf\nvboxvideo" >> /etc/modules-load.d/virtualbox.conf
-    arch-chroot /mnt mkdir /home/sporty/.config/nvim
-    arch-chroot /mnt curl https://raw.githubusercontent.com/sittim/configs/master/simple_init.vim > /home/sporty/.config/nvim/init.vim
+    pacman -S virtualbox-guest-utils
+    pacman -S neovim
+    echo "vboxguest\nvboxsf\nvboxvideo" >> /etc/modules-load.d/virtualbox.conf
+    mkdir /usr/share/nvim
+    curl https://raw.githubusercontent.com/sittim/configs/master/simple_init.vim > /usr/share/nvim/sysinit.vim
 }
 
 uefi_bootloader() {
