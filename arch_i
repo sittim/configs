@@ -32,7 +32,7 @@ local_information() {
     ln -s "/usr/share/zoneinfo/$TIMEZONE" /mnt/etc/localtime
     arch-chroot /mnt hwclock --systohc --utc
 
-    echo "$HOST" > /mnt/etc/hostname
+    hostnamectl set-hostname "$HOST"
 
     echo "Password for superuser:"
     arch-chroot /mnt passwd
@@ -47,7 +47,7 @@ install_software() {
     arch-chroot /mnt pacman -S -nonconfirm virtualbox-guest-utils
     arch-chroot /mnt pacman -S -nonconfirm neovim
     arch-chroot /mnt echo "vboxguest\nvboxsf\nvboxvideo" >> /etc/modules-load.d/virtualbox.conf
-    arch-chroot /mnt dir /home/sporty/.config/nvim
+    arch-chroot /mnt mkdir /home/sporty/.config/nvim
     arch-chroot /mnt curl https://raw.githubusercontent.com/sittim/configs/master/simple_init.vim > /home/sporty/.config/nvim/init.vim
 }
 
@@ -67,10 +67,10 @@ set -o xtrace
 parted -s /dev/sda rm 1
 parted -s /dev/sda rm 2
 
-read -p "Hit Enter to Begin Partitioning..."
+# read -p "Hit Enter to Begin Partitioning..."
 uefi_partitioning
 
-read -p "Hit Enter to Install Base System..."
+# read -p "Hit Enter to Install Base System..."
 base_system
 
 read -p "Hit Enter to add local information..."
