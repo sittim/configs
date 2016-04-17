@@ -48,7 +48,7 @@ install_software() {
     arch-chroot /mnt pacman -S neovim
     echo "vboxguest\nvboxsf\nvboxvideo" >> /etc/modules-load.d/virtualbox.conf
     mkdir /home/sporty/.config/nvim
-    curl https://github.com/sittim/configs/blob/master/simple_init.vim > /home/sporty/.config/nvim/init.vim
+    curl https://raw.githubusercontent.com/sittim/configs/master/arch_i
 }
 
 uefi_bootloader() {
