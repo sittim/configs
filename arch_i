@@ -55,7 +55,7 @@ install_software() {
 }
 
 uefi_bootloader() {
-    PARTID="$(blkid | grep "${DISK}1" | cut -d\" -f6)"
+    PARTID="$(blkid | grep "${DISK}2" | cut -d\" -f6)"
     bootctl --path=/mnt/boot install
     cat > /mnt/boot/loader/entries/arch.conf <<-EOF
         title       Arch Linux
