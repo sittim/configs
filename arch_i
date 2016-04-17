@@ -21,7 +21,8 @@ uefi_partitioning() {
 base_system() {
     URL="archlinux.org/mirrorlist/?country=US&use_mirror_status=on"
     curl -sL "$URL" | sed 's/#Server/Server/' > /etc/pacman.d/mirrorlist
-    pacstrap /mnt base base-devel
+    pacman -Sy
+    pacstrap /mnt $(pacman -Sqg base | sed 's/^linux$/&-lts/') 
     genfstab -U -p /mnt >> /mnt/etc/fstab
 }
 
@@ -44,6 +45,7 @@ local_information() {
 }
 
 install_software() {
+    arch-chroot /mnt /bin/bash
     pacman -S virtualbox-guest-utils
     pacman -S neovim
     echo "vboxguest\nvboxsf\nvboxvideo" >> /etc/modules-load.d/virtualbox.conf
@@ -52,7 +54,7 @@ install_software() {
 }
 
 uefi_bootloader() {
-    PARTID="$(blkid | grep "${DISK}2" | cut -d\" -f6)"
+    PARTID="$(blkid | grep "${DISK}1" | cut -d\" -f6)"
     bootctl --path=/mnt/boot install
     cat > /mnt/boot/loader/entries/arch.conf <<-EOF
         title       Arch Linux
