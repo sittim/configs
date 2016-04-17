@@ -67,8 +67,8 @@ EOF
 
 set -o xtrace
 
-parted -s /dev/sda rm 1
-parted -s /dev/sda rm 2
+# parted -s /dev/sda rm 1
+# parted -s /dev/sda rm 2
 
 # read -p "Hit Enter to Begin Partitioning..."
 uefi_partitioning
