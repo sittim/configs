@@ -7,7 +7,10 @@ DISK="/dev/sda"            # choose disk (Use lsblk to see list of available dis
 TIMEZONE="America/Kentucky/Louisville"  #to choose use 
 
 uefi_partitioning() {
-    # parted "$DISK" mklabel gpt
+    # parted -s /dev/sda rm 1
+    # parted -s /dev/sda rm 2
+
+    parted "$DISK" mklabel gpt
     parted -a optimal -- "$DISK" mkpart ESP fat32 1MiB 512MiB set 1 boot on
     parted -a optimal -- "$DISK" mkpart primary ext4 512MiB 100%
 
@@ -66,8 +69,6 @@ EOF
 
 set -o xtrace
 
-parted -s /dev/sda rm 1
-parted -s /dev/sda rm 2
 
 # read -p "Hit Enter to Begin Partitioning..."
 uefi_partitioning
