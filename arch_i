@@ -1,13 +1,13 @@
 #!/usr/bin/env sh
 # https://raw.githubusercontent.com/sittim/arch/master/inst 
 
-HOST="sputnik"        # Set host name here
+HOST="arch"        # Set host name here
 USER="sporty"         # Set user name here
 DISK="/dev/sda"            # choose disk (Use lsblk to see list of available disks)
 TIMEZONE="America/Kentucky/Louisville"  #to choose use 
 
 uefi_partitioning() {
-    parted "$DISK" mklabel gpt
+    # parted "$DISK" mklabel gpt
     parted -a optimal -- "$DISK" mkpart ESP fat32 1MiB 512MiB set 1 boot on
     parted -a optimal -- "$DISK" mkpart primary ext4 512MiB 100%
 
@@ -36,7 +36,7 @@ local_information() {
     ln -s "/usr/share/zoneinfo/$TIMEZONE" /mnt/etc/localtime
     arch-chroot /mnt hwclock --systohc --utc
 
-    hostnamectl set-hostname "$HOST"
+    arch_chroot /mnt hostnamectl set-hostname "$HOST"
 
     echo "Password for superuser:"
     arch-chroot /mnt passwd
@@ -48,9 +48,7 @@ local_information() {
 }
 
 install_software() {
-    arch-chroot /mnt pacman -S virtualbox-guest-utils
     arch-chroot /mnt pacman -S neovim
-    echo "vboxguest\nvboxsf\nvboxvideo" > /mnt/etc/modules-load.d/virtualbox.conf
     mkdir /mnt/usr/share/nvim
     curl https://raw.githubusercontent.com/sittim/configs/master/simple_init.vim > /mnt/usr/share/nvim/sysinit.vim
 }
@@ -68,8 +66,8 @@ EOF
 
 set -o xtrace
 
-# parted -s /dev/sda rm 1
-# parted -s /dev/sda rm 2
+parted -s /dev/sda rm 1
+parted -s /dev/sda rm 2
 
 # read -p "Hit Enter to Begin Partitioning..."
 uefi_partitioning
