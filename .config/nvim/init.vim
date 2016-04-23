@@ -22,10 +22,8 @@ Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'Raimondi/delimitMate'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'DoxygenToolkit.vim'
-Plug 'edkolev/tmuxline.vim'
 Plug 'vim-scripts/a.vim'
 Plug 'moll/vim-bbye'
-Plug 'christoomey/vim-tmux-navigator'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'troydm/zoomwintab.vim'
 Plug 'godlygeek/tabular'
@@ -53,9 +51,6 @@ set shell=bash
 set ttimeoutlen=50
 set synmaxcol=80
 set re=1
-"set ttyfast
-"set lazyredraw
-":redraw
 
 " Configure for C++ Development
 set exrc
@@ -77,7 +72,18 @@ vmap > >gv
 
 :nnoremap <Space> i_<Esc>r
 
+nnoremap <silent> ]<Space> :<C-u>put =repeat(nr2char(10),v:count)<Bar>execute "'[-1"<CR>
+nnoremap <silent> [<Space> :<C-u>put!=repeat(nr2char(10),v:count)<Bar>execute "']+1"<CR>
+
 :set spelllang=en_us
+
+augroup VimConfigs
+    autocmd!
+    autocmd TextChanged,InsertLeave,FocusLost,VimLeavePre *.h update
+    autocmd TextChanged,InsertLeave,FocusLost,VimLeavePre *.cpp update
+    autocmd TextChanged,InsertLeave,FocusLost,VimLeavePre *.md update
+    autocmd TextChanged,InsertLeave,FocusLost,VimLeavePre *.makefile update
+augroup END
 
 " =====[ Remap to change windows quickly ]====================================
 " :nnoremap <silent> <C-H> :wincmd h<CR>
@@ -131,8 +137,9 @@ set formatoptions=tcq
 let g:indent_guides_auto_colors = 0
 let g:indentLine_enabled = 1
 let g:indentLine_char = '¦'
-
-"let g:indentLine_color_term = 239
+" let g:indentLine_color_tty_light = 7 " (default: 4)
+" let g:indentLine_color_dark = 9 " (default: 2)
+" let g:indentLine_color_term = 81
 
 "=====[ Remap Leader Key ]====================================================
 let mapleader = ","
@@ -173,6 +180,12 @@ autocmd Filetype java map <leader>jd :call javacomplete#GoToDefinition()<CR>
     let g:clang_format#style_options = {
                 \ "AccessModifierOffset" : -3,
                 \ "Standard" : "C++03"}
+
+augroup ClangFmt
+    autocmd!
+    autocmd BufWritePre *.cpp  ClangFormat
+    autocmd BufWritePre *.h  ClangFormat
+augroup END
 
 "=====[ cpp enhanced highlight ]===============================================
 let g:cpp_class_scope_highlight = 1
@@ -221,8 +234,12 @@ let g:neomake_cpp_cpplint_maker = {
 let g:neomake_cpp_enabled_makers = ['cpplint']
 let g:neomake_java_enabled_makers = ['javac']
 
-:autocmd! BufWritePost,VimEnter *.java Neomake 
-:autocmd! BufWritePost,VimEnter,InsertLeave *.cpp Neomake
+augroup Nmake
+    autocmd!
+    autocmd TextChanged,InsertLeave,FocusLost *.java Neomake
+    autocmd TextChanged,FocusLost,InsertLeave,VimEnter *.cpp  Neomake
+    autocmd TextChanged,FocusLost,InsertLeave,VimEnter *.h  Neomake
+augroup END
 
 "=====[ airline configuration ]===============================================
 let g:airline_powerline_fonts = 1
@@ -274,9 +291,6 @@ map <Leader> <Plug>(easymotion-prefix)
 map  / <Plug>(easymotion-sn)
 omap / <Plug>(easymotion-tn)
 nnoremap <leader>nh :nohlsearch<CR>
-
-"=====[ tmux line configuration ]=============================================
-let g:tmuxline_preset = 'full'
 
 "=====[deoplete]==============================================================
 " let g:deoplete#enable_at_startup = 1
@@ -349,8 +363,6 @@ augroup BgHighlight
             \substitute(expand('%'), '\m_test\.cpp$', '.makefile', ''))
 augroup END
 
-nnoremap <silent> ]<Space> :<C-u>put =repeat(nr2char(10),v:count)<Bar>execute "'[-1"<CR>
-nnoremap <silent> [<Space> :<C-u>put!=repeat(nr2char(10),v:count)<Bar>execute "']+1"<CR>
 
 "Rename tabs to show tab# and # of viewports
 if exists("+showtabline")
@@ -400,3 +412,5 @@ if exists("+showtabline")
     set stal=2
     set tabline=%!MyTabLine()
 endif
+
+autocmd BufRead,BufNewFile *.dlog set filetype=dlog
