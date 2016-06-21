@@ -43,7 +43,6 @@ Plug 'rhysd/vim-clang-format'
 " Plug 'bbchung/clighter'
 Plug 'davidhalter/jedi-vim'
 Plug 'dhruvasagar/vim-table-mode'
-Plug 'blueyed/vim-diminactive'
 
 call plug#end()
 
@@ -397,9 +396,10 @@ nnoremap <C-b> :wa <bar> :make!<cr>
 nnoremap <F4> :wa <bar> :make!<cr>
 nnoremap <F8> :NERDTreeToggle<CR>
 
+
 augroup BgHighlight
     autocmd!
-    autocmd WinEnter * set colorcolumn=80  " colorcolumn
+    autocmd WinEnter * execute "set colorcolumn=" . join(range(81,335), ',')
     autocmd WinEnter * set cul             " highlight current line
     autocmd WinLeave * set colorcolumn=    " column
     autocmd WinLeave * set nocul           " no highlight current line
