@@ -5,9 +5,10 @@ alias l='ls -CF'
 
 alias goh='cd /home/sporty/go/src/bitbucket.org/tsitnikov'                            
 alias chatt='ssh tim@192.168.251.30'                                            
+alias om='cd ~/go/src/bitbucket.org/tsitnikov/open-medicine/'
 
 # Staging Machine login
-alias st="ssh receiver@mueller.23stages.com"
+alias stg="ssh receiver@mueller.23stages.com"
 
 # Debud
 alias uart="picocom -b 115200 --imap crcrlf /dev/ttyUSB0"

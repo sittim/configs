@@ -30,7 +30,6 @@ Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'dyng/ctrlsf.vim'
-Plug 'rking/ag.vim'
 Plug 'jaxbot/github-issues.vim'
 " Plug 'shougo/deoplete.nvim'
 " Plug 'zchee/deoplete-clang'
@@ -43,6 +42,8 @@ Plug 'adragomir/javacomplete'
 Plug 'rhysd/vim-clang-format'
 " Plug 'bbchung/clighter'
 Plug 'davidhalter/jedi-vim'
+Plug 'dhruvasagar/vim-table-mode'
+Plug 'blueyed/vim-diminactive'
 
 call plug#end()
 
@@ -101,6 +102,12 @@ augroup END
 :nnoremap <c-k> <C-w>k
 :nnoremap <c-l> <C-w>l
 
+"" Split
+noremap <Leader>h :<C-u>split<CR>
+noremap <Leader>v :<C-u>vsplit<CR>
+
+let g:terminal_scrollback_buffer_size=50000
+
 "=====[ Set Cursor ]========================================================
 " use an orange cursor in insert mode
 " let &t_SI = "\<Esc>]12;orange\x7"
@@ -136,7 +143,10 @@ set formatoptions=tcq
 ""=====[ Indent Guidelines ]===================================================
 let g:indent_guides_auto_colors = 0
 let g:indentLine_enabled = 1
-let g:indentLine_char = '¦'
+let g:indentLine_char = '┆'
+let g:indentLine_faster = 1
+let g:indentLine_concealcursor = 0
+" let g:indentLine_char = '¦'
 " let g:indentLine_color_tty_light = 7 " (default: 4)
 " let g:indentLine_color_dark = 9 " (default: 2)
 " let g:indentLine_color_term = 81
@@ -157,6 +167,7 @@ map gd :bd<cr>
 
 "=====[ Remap the Escap Key ]=================================================
 :inoremap jk <Esc>
+:inoremap <esc> `
 
 "=====[ JavaComplete ]========================================================
 autocmd Filetype java setlocal omnifunc=javacomplete#Complete
@@ -186,6 +197,8 @@ augroup ClangFmt
     autocmd BufWritePre *.cpp  ClangFormat
     autocmd BufWritePre *.h  ClangFormat
 augroup END
+
+:nnoremap <leader>cf :ClangFormat<CR>
 
 "=====[ cpp enhanced highlight ]===============================================
 let g:cpp_class_scope_highlight = 1
@@ -243,9 +256,46 @@ augroup END
 
 "=====[ airline configuration ]===============================================
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
+
+" vim-airline
+if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
+
+if !exists('g:airline_powerline_fonts')
+  let g:airline#extensions#tabline#left_sep = ' '
+  let g:airline#extensions#tabline#left_alt_sep = '|'
+  let g:airline_left_sep          = '▶'
+  let g:airline_left_alt_sep      = '»'
+  let g:airline_right_sep         = '◀'
+  let g:airline_right_alt_sep     = '«'
+  let g:airline#extensions#branch#prefix     = '⤴' "➔, ➥, ⎇
+  let g:airline#extensions#readonly#symbol   = '⊘'
+  let g:airline#extensions#linecolumn#prefix = '¶'
+  let g:airline#extensions#paste#symbol      = 'ρ'
+  let g:airline_symbols.linenr    = '␊'
+  let g:airline_symbols.branch    = '⎇'
+  let g:airline_symbols.paste     = 'ρ'
+  let g:airline_symbols.paste     = 'Þ'
+  let g:airline_symbols.paste     = '∥'
+  let g:airline_symbols.whitespace = 'Ξ'
+else
+  let g:airline#extensions#tabline#left_sep = ''
+  let g:airline#extensions#tabline#left_alt_sep = ''
+
+  " powerline symbols
+  let g:airline_left_sep = ''
+  let g:airline_left_alt_sep = ''
+  let g:airline_right_sep = ''
+  let g:airline_right_alt_sep = ''
+  let g:airline_symbols.branch = ''
+  let g:airline_symbols.readonly = ''
+  let g:airline_symbols.linenr = ''
+endif
 
 "=====[ ultisnips ]===========================================================
 let g:UltiSnipsExpandTrigger="<c-e>"
@@ -313,6 +363,9 @@ nnoremap <leader>nh :nohlsearch<CR>
     " \'-isystem','/home/sporty/ti/ccsv6/ccs_base/msp430/include'
     " \]
 
+"=====[ VIM Table Mode ]======================================================
+let g:table_mode_corner="|"
+
 "=====[ Confgiure the screen ]================================================
 syntax enable
 
@@ -327,11 +380,11 @@ let g:solarized_italic=1
 let g:solarized_underline=1
 let g:solarized_bold=1
 let g:solarized_visibility= "high"
-"set background=light
 colorscheme solarized
 call togglebg#map("<F3>")
 
- set background=dark
+set background=light
+ " set background=dark
 
 "=====[ Generic Configurations ]================================================
 set laststatus=2
@@ -346,15 +399,14 @@ nnoremap <F8> :NERDTreeToggle<CR>
 
 augroup BgHighlight
     autocmd!
-    autocmd WinEnter * highlight ColorColumn ctermbg=yellow
-    autocmd WinEnter * set colorcolumn=80
-    autocmd WinLeave * set colorcolumn=0
-    autocmd WinEnter * set cul
-    autocmd WinLeave * set nocul
+    autocmd WinEnter * set colorcolumn=80  " colorcolumn
+    autocmd WinEnter * set cul             " highlight current line
+    autocmd WinLeave * set colorcolumn=    " column
+    autocmd WinLeave * set nocul           " no highlight current line
 
     autocmd BufReadPost quickfix map <buffer> <leader>qq :cclose<cr>
-                               \|map <buffer> <c-p> <up>
-                               \|map <buffer> <c-n> <down>
+                               " \|map <buffer> <c-p> <up>
+                               " \|map <buffer> <c-n> <down>
 
     "=====[ makefile binding ]================================================
     autocmd  BufRead,BufNewFile  *.cpp
