@@ -322,8 +322,7 @@ let g:EasyMotion_smartcase = 1
 nmap <Leader>l <Plug>(easymotion-lineforward)
 nmap <Leader>j <Plug>(easymotion-j)
 nmap <Leader>k <Plug>(easymotion-k)
-nmap <Leader>h <Plug>(easymotion-linebackward)let g:table_mode_corner_corner="+"
-let g:table_mode_header_fillchar="="
+nmap <Leader>h <Plug>(easymotion-linebackward)let
 
 map <Leader> <Plug>(easymotion-prefix)
 
@@ -354,6 +353,8 @@ nnoremap <leader>nh :nohlsearch<CR>
 
 "=====[ vim-table-mode ]======================================================
 " let g:table_mode_corner="+"
+" let g:table_mode_corner_corner="+"
+" let g:table_mode_header_fillchar="="
 " let g:table_mode_corner_corner="+"
 " let g:table_mode_header_fillchar="="
 

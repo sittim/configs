@@ -13,6 +13,7 @@ Plug 'lukaszkorecki/workflowish'
 Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'endel/vim-github-colorscheme'
+Plug 'dhruvasagar/vim-table-mode'
 
 call plug#end()
 
