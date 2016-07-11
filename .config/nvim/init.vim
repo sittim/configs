@@ -5,9 +5,11 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
+" Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
+Plug 'oblitum/YouCompleteMe', { 'do': './install.py --clang-completer' }
 Plug 'benekastah/neomake'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+Plug 'ervandew/supertab'
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'altercation/vim-colors-solarized'
@@ -40,27 +42,31 @@ Plug 'flazz/vim-colorschemes'
 " Plug 'artur-shaik/vim-javacomplete2'
 Plug 'adragomir/javacomplete'
 Plug 'rhysd/vim-clang-format'
-" Plug 'bbchung/clighter'
 Plug 'davidhalter/jedi-vim'
 Plug 'dhruvasagar/vim-table-mode'
+Plug 'Rykka/InstantRst'
+" Plug 'Rykka/riv.vim'
 
 call plug#end()
 
 set shell=bash
 
 set ttimeoutlen=50
-set synmaxcol=80
 set re=1
 
 " Configure for C++ Development
-set exrc
+set exrc             " local rc file
 set secure
 set tabstop=4
 set softtabstop=4
-set noexpandtab
-set colorcolumn=80
-:set cursorline
-:set t_ut=
+set t_ut=
+set relativenumber
+set cul
+set laststatus=2
+set number
+set ruler
+set tags=tags;
+set expandtab
 
 noremap YY "+y<CR>
 noremap P "+gP<CR>
@@ -77,19 +83,21 @@ nnoremap <silent> [<Space> :<C-u>put!=repeat(nr2char(10),v:count)<Bar>execute "'
 
 :set spelllang=en_us
 
-augroup VimConfigs
+augroup VimSetColumns
+    autocmd WinEnter * execute "set colorcolumn=" . join(range(81,255), ',')
+    autocmd WinEnter * set cul 
+    autocmd WinLeave * set colorcolumn=|set nocul
+    autocmd FileType cpp set tabstop=4|set synmaxcol=80|set expandtab
+augroup END
+
+augroup VimSaveConfigs
     autocmd!
-    autocmd TextChanged,InsertLeave,FocusLost,VimLeavePre *.h update
-    autocmd TextChanged,InsertLeave,FocusLost,VimLeavePre *.cpp update
+    au Filetype cpp :au! TextChanged,InsertLeave,FocusLost,VimLeavePre <buffer> :update
     autocmd TextChanged,InsertLeave,FocusLost,VimLeavePre *.md update
     autocmd TextChanged,InsertLeave,FocusLost,VimLeavePre *.makefile update
 augroup END
 
 " =====[ Remap to change windows quickly ]====================================
-" :nnoremap <silent> <C-H> :wincmd h<CR>
-" :nnoremap <silent> <C-J> :wincmd j<CR>
-" :nnoremap <silent> <C-K> :wincmd k<CR>
-" :nnoremap <silent> <C-L> :wincmd l<CR>
 :tnoremap <Esc> <C-\><C-n>
 
 :tnoremap <c-h> <C-\><C-n><C-w>h
@@ -101,21 +109,11 @@ augroup END
 :nnoremap <c-k> <C-w>k
 :nnoremap <c-l> <C-w>l
 
-"" Split
+" Split
 noremap <Leader>h :<C-u>split<CR>
 noremap <Leader>v :<C-u>vsplit<CR>
 
 let g:terminal_scrollback_buffer_size=50000
-
-"=====[ Set Cursor ]========================================================
-" use an orange cursor in insert mode
-" let &t_SI = "\<Esc>]12;orange\x7"
-" use a red cursor otherwise
-" let &t_EI = "\<Esc>]12;red\x7"
-" silent !echo -ne "\033]12;red\007"
-" reset cursor when vim exits
-" autocmd VimLeave * silent !echo -ne "\033]112\007"
-" use \003]12;gray\007 for gnome-terminal
 
 "=====[ vim-markdown ]========================================================
 augroup VimMarkdown
@@ -127,7 +125,8 @@ augroup END
 let g:vim_markdown_folding_disabled = 1
 let g:vim_markdown_conceal = 0
 
-"=====[ vim-repeat ]==========================================================
+" =====[ VIM riv ]============================================================
+let g:riv_fold_auto_update=0
 
 " =====[ C++ formatting ]=====================================================
 set cindent shiftwidth=4
@@ -142,13 +141,9 @@ set formatoptions=tcq
 ""=====[ Indent Guidelines ]===================================================
 let g:indent_guides_auto_colors = 0
 let g:indentLine_enabled = 1
-let g:indentLine_char = '┆'
+" let g:indentLine_char = '┆'
 let g:indentLine_faster = 1
 let g:indentLine_concealcursor = 0
-" let g:indentLine_char = '¦'
-" let g:indentLine_color_tty_light = 7 " (default: 4)
-" let g:indentLine_color_dark = 9 " (default: 2)
-" let g:indentLine_color_term = 81
 
 "=====[ Remap Leader Key ]====================================================
 let mapleader = ","
@@ -158,33 +153,17 @@ map gn :bn<cr>
 map gp :bp<cr>
 map gd :bd<cr>
 
-" =====[ Add semicolins to the end of line ]==================================
+" =====[ Add semicolins to the end of line ]=================================
 :nnoremap <leader>; ms$A;<ESC>`s
 :inoremap <leader>; <ESC>ms$A;<ESC>`s
 
 :nnoremap <Leader>q :Bdelete<CR>
 
-"=====[ Remap the Escap Key ]=================================================
+"=====[ Remap the Escap Key]==================================================
 :inoremap jk <Esc>
 :inoremap <esc> `
 
-"=====[ JavaComplete ]========================================================
-autocmd Filetype java setlocal omnifunc=javacomplete#Complete
-autocmd Filetype java map <leader>jd :call javacomplete#GoToDefinition()<CR>
-
-"=====[ JavaComplete2 ]=======================================================
-" autocmd FileType java setlocal omnifunc=javacomplete#Complete
-
-" nmap <F4> <Plug>(JavaComplete-Imports-AddSmart)
-" map <F4> <Plug>(JavaComplete-Imports-AddSmart)
-
-" nmap <F6> <Plug>(JavaComplete-Imports-Add)
-" imap <F6> <Plug>(JavaComplete-Imports-Add)
-
-" nmap <F7> <Plug>(JavaComplete-Imports-AddMissing)
-" imap <F7> <Plug>(JavaComplete-Imports-AddMissing)
-
-"=====[ ClangFormat ]==========================================================
+"=====[ ClangFormat ]=========================================================
     let g:clang_format#code_style='google'
 
     let g:clang_format#style_options = {
@@ -199,21 +178,13 @@ augroup END
 
 :nnoremap <leader>cf :ClangFormat<CR>
 
-"=====[ cpp enhanced highlight ]===============================================
+"=====[ CtrlSF ]===============================================================
+let g:ctrlsf_auto_close = 0
+let g:ctrlsf_ignore_dir = ['.git']
+let g:ctrlsf_winsize = '82'
+
+" "=====[ cpp enhanced highlight ]===============================================
 let g:cpp_class_scope_highlight = 1
-
-" =====[ clighter ]============================================================
-" let g:clighter_compile_args = ['-isystem /usr/lib/llvm-3.6/lib/clang/3.6.0/include',
-                              " \'-I/home/sporty/ws-ccs/hw_1_5/miwt-os',
-                              " \'-std=c++03']
-" let g:clighter_cursor_hl_mode=1
-" let g:clighter_highlight_mode=0
-" let g:clighter_autostart = 1
-
-" nmap <silent> <Leader>r :call clighter#Rename()<CR>
-
-"=====[ AG ]==================================================================
-" let g:ag_working_path_mode="r"
 
 "=====[ GitHub Issues ]========================================================
 
@@ -221,16 +192,14 @@ let g:cpp_class_scope_highlight = 1
 let g:NERDSpaceDelims=1
 
 " =====[ CtrlP ]==============================================================
-" let g:ctrlp_map = '<C-p>'
-" let g:ctrlp_map = '<C-p>'
 nnoremap <silent> '<C-p>' :ClearCtrlPCache<cr>\|:CtrlP<cr>
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
 set wildignore+=*.so,*.swp,*.zip,*.o,*.a,*_test,*.prefs,.project,.cproject
-set wildignore+=.ccsproject
+set wildignore+=.ccsproject,Test,Debug,Release
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-" let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
-let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+" let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+let g:ctrlp_user_command = 'ag %s -l -g ""'
 let g:ctrlp_use_caching = 0
 let g:ctrlp_switch_buffer=0
 
@@ -248,9 +217,8 @@ let g:neomake_java_enabled_makers = ['javac']
 
 augroup Nmake
     autocmd!
-    autocmd TextChanged,InsertLeave,FocusLost *.java Neomake
-    autocmd TextChanged,FocusLost,InsertLeave,VimEnter *.cpp  Neomake
-    autocmd TextChanged,FocusLost,InsertLeave,VimEnter *.h  Neomake
+    au Filetype cpp :au TextChanged,InsertLeave,VimEnter <buffer> :Neomake
+    " autocmd TextChanged,FocusLost,InsertLeave,VimEnter *.h  Neomake
 augroup END
 
 "=====[ airline configuration ]===============================================
@@ -303,12 +271,11 @@ let g:UltiSnipsJumpBackwardTrigger="<c-b>"
 
 "=====[ vim-cpp-enhanced-highlight ]==========================================
 let g:cpp_class_scope_highlight = 1
-let g:cpp_experimental_template_highlight = 1
 
 "=====[ YouCompleteMe Configurations ]========================================
 " let g:ycm_min_num_of_chars_for_completion = 99
-"let g:ycm_autoclose_preview_window_after_completion = 1
-"let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
 let g:ycm_key_invoke_completion = '<C-Space>'
@@ -323,6 +290,28 @@ nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
 
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip
 
+"=====[ vim-multiple-cursors]===================================================
+" Called once right before you start selecting multiple cursors
+function! Multiple_cursors_before()
+    call youcompleteme#DisableCursorMovedAutocommands()
+    let g:ycm_auto_trigger = 99
+    augroup VimSaveConfigs
+        autocmd!
+    augroup END
+endfunction
+
+" Called once only when the multiple selection is canceled (default <Esc>)
+function! Multiple_cursors_after()
+    let g:ycm_auto_trigger = 1
+    call youcompleteme#EnableCursorMovedAutocommands()
+    augroup VimSaveConfigs
+        autocmd!
+        au Filetype cpp :au! TextChanged,InsertLeave,FocusLost,VimLeavePre <buffer> :update
+        autocmd TextChanged,InsertLeave,FocusLost,VimLeavePre *.md update
+        autocmd TextChanged,InsertLeave,FocusLost,VimLeavePre *.makefile update
+    augroup END
+endfunction
+
 "=====[ easy motion ]===-======================================================
 nmap s <Plug>(easymotion-s2)
 
@@ -333,7 +322,8 @@ let g:EasyMotion_smartcase = 1
 nmap <Leader>l <Plug>(easymotion-lineforward)
 nmap <Leader>j <Plug>(easymotion-j)
 nmap <Leader>k <Plug>(easymotion-k)
-nmap <Leader>h <Plug>(easymotion-linebackward)
+nmap <Leader>h <Plug>(easymotion-linebackward)let g:table_mode_corner_corner="+"
+let g:table_mode_header_fillchar="="
 
 map <Leader> <Plug>(easymotion-prefix)
 
@@ -362,8 +352,10 @@ nnoremap <leader>nh :nohlsearch<CR>
     " \'-isystem','/home/sporty/ti/ccsv6/ccs_base/msp430/include'
     " \]
 
-"=====[ VIM Table Mode ]======================================================
-let g:table_mode_corner="|"
+"=====[ vim-table-mode ]======================================================
+" let g:table_mode_corner="+"
+" let g:table_mode_corner_corner="+"
+" let g:table_mode_header_fillchar="="
 
 "=====[ Confgiure the screen ]================================================
 syntax enable
@@ -382,33 +374,18 @@ let g:solarized_visibility= "high"
 colorscheme solarized
 call togglebg#map("<F3>")
 
-set background=light
- " set background=dark
+" set background=light
+set background=dark
 
 "=====[ Generic Configurations ]================================================
-set laststatus=2
-set number
-set ruler
-set tags=tags;
-set expandtab
 
 nnoremap <C-b> :wa <bar> :make!<cr>
 nnoremap <F4> :wa <bar> :make!<cr>
 nnoremap <F8> :NERDTreeToggle<CR>
 
-
 augroup BgHighlight
     autocmd!
-    autocmd WinEnter * execute "set colorcolumn=" . join(range(81,335), ',')
-    autocmd WinEnter * set cul             " highlight current line
-    autocmd WinLeave * set colorcolumn=    " column
-    autocmd WinLeave * set nocul           " no highlight current line
-
     autocmd BufReadPost quickfix map <buffer> <leader>qq :cclose<cr>
-                               " \|map <buffer> <c-p> <up>
-                               " \|map <buffer> <c-n> <down>
-
-    "=====[ makefile binding ]================================================
     autocmd  BufRead,BufNewFile  *.cpp
         \ let &l:makeprg
         \ = 'make -f '.fnameescape(

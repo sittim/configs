@@ -3,7 +3,6 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'tpope/vim-markdown'
 Plug 'Yggdroot/indentLine'
-" vim-snippets depends on ultisnips
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'tpope/vim-surround'
 Plug 'scrooloose/nerdcommenter'
@@ -11,6 +10,9 @@ Plug 'morhetz/gruvbox'
 Plug 'Lokaltog/vim-easymotion'
 Plug 'freitass/todo.txt-vim'
 Plug 'lukaszkorecki/workflowish'
+Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'endel/vim-github-colorscheme'
 
 call plug#end()
 
