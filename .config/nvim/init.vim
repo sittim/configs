@@ -5,15 +5,15 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
-" Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
-Plug 'oblitum/YouCompleteMe', { 'do': './install.py --clang-completer' }
-Plug 'benekastah/neomake'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
+" Plug 'oblitum/YouCompleteMe', { 'do': './install.py --clang-completer' }
+" Plug 'Rip-Rip/clang_complete'
+" Plug 'benekastah/neomake'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'ervandew/supertab'
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'altercation/vim-colors-solarized'
-Plug 'morhetz/gruvbox'
 Plug 'kopischke/unite-spell-suggest'
 Plug 'scrooloose/nerdcommenter'
 " ---------------  Nurdtree -------------------
@@ -39,14 +39,15 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'mhartington/oceanic-next'
 Plug 'flazz/vim-colorschemes'
-" Plug 'artur-shaik/vim-javacomplete2'
-Plug 'adragomir/javacomplete'
 Plug 'rhysd/vim-clang-format'
-Plug 'davidhalter/jedi-vim'
 Plug 'dhruvasagar/vim-table-mode'
-Plug 'Rykka/InstantRst'
+" Plug 'Rykka/InstantRst'
 " Plug 'Rykka/riv.vim'
-
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'edkolev/tmuxline.vim'
+Plug 'keith/tmux.vim'
+Plug 'kana/vim-operator-user'
+Plug 'idanarye/vim-smile'
 call plug#end()
 
 set shell=bash
@@ -67,6 +68,7 @@ set number
 set ruler
 set tags=tags;
 set expandtab
+set t_Co=
 
 noremap YY "+y<CR>
 noremap P "+gP<CR>
@@ -97,9 +99,11 @@ augroup VimSaveConfigs
     autocmd TextChanged,InsertLeave,FocusLost,VimLeavePre *.makefile update
 augroup END
 
-" =====[ Remap to change windows quickly ]====================================
-:tnoremap <Esc> <C-\><C-n>
+" =====[ Terminal ]============================================================
+:tnoremap jk <C-\><C-n>
+" :tnoremap <Esc> <C-\><C-n>
 
+" Change windows quickly
 :tnoremap <c-h> <C-\><C-n><C-w>h
 :tnoremap <c-j> <C-\><C-n><C-w>j
 :tnoremap <c-k> <C-\><C-n><C-w>k
@@ -109,9 +113,7 @@ augroup END
 :nnoremap <c-k> <C-w>k
 :nnoremap <c-l> <C-w>l
 
-" Split
-noremap <Leader>h :<C-u>split<CR>
-noremap <Leader>v :<C-u>vsplit<CR>
+autocmd BufWinEnter,WinEnter term://* startinsert
 
 let g:terminal_scrollback_buffer_size=50000
 
@@ -145,25 +147,25 @@ let g:indentLine_enabled = 1
 let g:indentLine_faster = 1
 let g:indentLine_concealcursor = 0
 
-"=====[ Remap Leader Key ]====================================================
+"=====[ Remap Leader Key ]======================================================
 let mapleader = ","
 
-"=====[ cycle through buffers ]===============================================
+"=====[ cycle through buffers ]=================================================
 map gn :bn<cr>
 map gp :bp<cr>
 map gd :bd<cr>
 
-" =====[ Add semicolins to the end of line ]=================================
+" =====[ Add semicolins to the end of line ]====================================
 :nnoremap <leader>; ms$A;<ESC>`s
 :inoremap <leader>; <ESC>ms$A;<ESC>`s
 
 :nnoremap <Leader>q :Bdelete<CR>
 
-"=====[ Remap the Escap Key]==================================================
+"=====[ Remap the Escap Key]====================================================
 :inoremap jk <Esc>
 :inoremap <esc> `
 
-"=====[ ClangFormat ]=========================================================
+"=====[ vim-clang-format ]======================================================
     let g:clang_format#code_style='google'
 
     let g:clang_format#style_options = {
@@ -178,48 +180,65 @@ augroup END
 
 :nnoremap <leader>cf :ClangFormat<CR>
 
-"=====[ CtrlSF ]===============================================================
+"=====[ CtrlSF ]================================================================
 let g:ctrlsf_auto_close = 0
 let g:ctrlsf_ignore_dir = ['.git']
 let g:ctrlsf_winsize = '82'
 
-" "=====[ cpp enhanced highlight ]===============================================
+" "=====[ cpp enhanced highlight ]==============================================
 let g:cpp_class_scope_highlight = 1
 
-"=====[ GitHub Issues ]========================================================
+"=====[ GitHub Issues ]=========================================================
 
-"=====[ NerdCommenter]===============================================
+"=====[ NerdCommenter]==========================================================
 let g:NERDSpaceDelims=1
 
-" =====[ CtrlP ]==============================================================
-nnoremap <silent> '<C-p>' :ClearCtrlPCache<cr>\|:CtrlP<cr>
-let g:ctrlp_cmd = 'CtrlP'
+"=====[ vim-tmux-navigator ]====================================================
+
+"=====[ NerdTree ]==============================================================
+let g:NERDTreeWinSize=26
+
+"=====[ CtrlP ]================================================================
+" let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
 set wildignore+=*.so,*.swp,*.zip,*.o,*.a,*_test,*.prefs,.project,.cproject
 set wildignore+=.ccsproject,Test,Debug,Release
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-" let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 let g:ctrlp_user_command = 'ag %s -l -g ""'
 let g:ctrlp_use_caching = 0
 let g:ctrlp_switch_buffer=0
 
-" =====[ Neomake Config ]=====================================================
+" =====[ FZF ]==================================================================
+" map <silent> <C-p> :FZF -m<cr>
+
+imap <C-f> <plug>(fzf-complete-line)
+
+" <M-p> for open buffers
+nnoremap <silent> <M-p> :Buffers<cr>
+
+" <M-S-p> for MRU
+nnoremap <silent> <M-S-p> :History<cr>
+
+" Use fuzzy completion relative filepaths across directory
+imap <expr> <c-x><c-f> fzf#vim#complete#path('git ls-files $(git rev-parse --show-toplevel)')
+
+" =====[ Neomake Config ]=======================================================
 " let g:neomake_cpp_clang_maker = {
     " \ 'args': ['-fsyntax-only','-std=c++03','-Wall','-Wextra', '-I.']
     " \}
 " let g:neomake_cpp_enabled_makers = ['clang']
 
-let g:neomake_cpp_cpplint_maker = {
-            \ 'exe': 'cpplint'
-            \ }
-let g:neomake_cpp_enabled_makers = ['cpplint']
-let g:neomake_java_enabled_makers = ['javac']
+" let g:neomake_cpp_cpplint_maker = {
+            " \ 'exe': 'cpplint'
+            " \ }
+" let g:neomake_cpp_enabled_makers = ['cpplint']
+" let g:neomake_java_enabled_makers = ['javac']
 
-augroup Nmake
-    autocmd!
-    au Filetype cpp :au TextChanged,InsertLeave,VimEnter <buffer> :Neomake
-    " autocmd TextChanged,FocusLost,InsertLeave,VimEnter *.h  Neomake
-augroup END
+" augroup Nmake
+    " autocmd!
+    " au Filetype cpp :au TextChanged,InsertLeave,VimEnter <buffer> :Neomake
+    " " autocmd TextChanged,FocusLost,InsertLeave,VimEnter *.h  Neomake
+" augroup END
 
 "=====[ airline configuration ]===============================================
 let g:airline_powerline_fonts = 1
@@ -227,42 +246,6 @@ let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
-
-" vim-airline
-if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
-endif
-
-if !exists('g:airline_powerline_fonts')
-  let g:airline#extensions#tabline#left_sep = ' '
-  let g:airline#extensions#tabline#left_alt_sep = '|'
-  let g:airline_left_sep          = '▶'
-  let g:airline_left_alt_sep      = '»'
-  let g:airline_right_sep         = '◀'
-  let g:airline_right_alt_sep     = '«'
-  let g:airline#extensions#branch#prefix     = '⤴' "➔, ➥, ⎇
-  let g:airline#extensions#readonly#symbol   = '⊘'
-  let g:airline#extensions#linecolumn#prefix = '¶'
-  let g:airline#extensions#paste#symbol      = 'ρ'
-  let g:airline_symbols.linenr    = '␊'
-  let g:airline_symbols.branch    = '⎇'
-  let g:airline_symbols.paste     = 'ρ'
-  let g:airline_symbols.paste     = 'Þ'
-  let g:airline_symbols.paste     = '∥'
-  let g:airline_symbols.whitespace = 'Ξ'
-else
-  let g:airline#extensions#tabline#left_sep = ''
-  let g:airline#extensions#tabline#left_alt_sep = ''
-
-  " powerline symbols
-  let g:airline_left_sep = ''
-  let g:airline_left_alt_sep = ''
-  let g:airline_right_sep = ''
-  let g:airline_right_alt_sep = ''
-  let g:airline_symbols.branch = ''
-  let g:airline_symbols.readonly = ''
-  let g:airline_symbols.linenr = ''
-endif
 
 "=====[ ultisnips ]===========================================================
 let g:UltiSnipsExpandTrigger="<c-e>"
@@ -274,8 +257,8 @@ let g:cpp_class_scope_highlight = 1
 
 "=====[ YouCompleteMe Configurations ]========================================
 " let g:ycm_min_num_of_chars_for_completion = 99
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_autoclose_preview_window_after_insertion = 1
+" let g:ycm_autoclose_preview_window_after_completion = 1
+" let g:ycm_autoclose_preview_window_after_insertion = 0
 let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
 let g:ycm_key_invoke_completion = '<C-Space>'
@@ -285,10 +268,57 @@ let g:ycm_auto_trigger = 1
 let g:ycm_key_detailed_diagnostics = '<leader>d'
 let g:ycm_filepath_completion_use_working_dir = 1
 nnoremap <leader>jd :YcmCompleter GoTo<CR>
-nnoremap <F5> :YcmForceCompileAndDiagnostics<CR>
+nnoremap <leader>y :YcmForceCompileAndDiagnostics<CR><CR>
 "let g:ycm_show_diagnostics_ui = 0
 
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+
+"=====[ clang-completen ]=======================================================
+" " let g:clang_auto_select = 0 " 0/1/2 auto select first entry in popup menu
+" " let g:clang_complete_auto = 0 " auto complete after -> . ::
+" let g:clang_complete_copen = 1 " 1: open quickfix window on error
+" let g:clang_hl_errors = 1 " highlight warnings and errors
+" let g:clang_periodic_quickfix = 0 " periodically update quickfix
+" " you can use g:ClangUpdateQuickFix() with a mapping to do this
+" let g:clang_snippets = 1
+" " clang_complete, snipmate, ultisnips
+" let g:clang_snippets_engine = "ultisnips"
+" let g:clang_conceal_snippets = 1
+" let g:clang_trailing_placeholder = 0 " for clang_complete snippet engine
+" let g:clang_close_preview = 0 " auto close preview window after completion
+" let g:clang_exec = "clang" " name or path of clang executable.
+" " let g:clang_user_options = '-std=gnu++0x -include malloc.h -fms-extensions -fgnu-runtime'
+" " let g:clang_user_options = '-std=c++11 -stdlib=libc++'
+" let g:clang_use_library = 1
+" let g:clang_library_path = "/usr/lib/"
+" let g:clang_sort_algo = "priority"
+" let g:clang_complete_macros = 1
+" let g:clang_complete_patterns = 1
+" let g:clang_library_path="/usr/lib/llvm-3.8/lib" 
+" let g:clang_user_options =
+                " \ '-std=c++03' .
+                " \ '-isystem /usr/local/include'.
+                " \ '-isystem /usr/include'.
+                " \ '-isystem /usr/include/c++/4.9'.
+                " \ '-isystem /usr/include/x86_64-linux-gnu/c++/4.9'.
+                " \ '-isystem /usr/include/c++/4.9/backward'.
+                " \ '-isystem /home/sporty/work/googletest/googletest/include'.
+                " \ '-isystem /home/sporty/work/googletest/googlemock/include'.
+                " \ '-isystem /home/sporty/ti/ccsv6/ccs_base/msp430/include'.
+                " \ '-I .'.
+                " \ '-g'.
+                " \ '-Wall'.
+                " \ '-Wextra'.
+                " \ '-Werror'.
+                " \ '-fsyntax-only'.
+                " \ '-pthread'.
+                " \ '-Wno-unknown-pragmas'.
+                " \ '-DDEBUG'.
+                " \ '-DTEST'.
+                " \ '-D_BIC_SR(x)='.
+                " \ '-D_BIS_SR(x)='.
+                " \ '-D__MSP430F5335__'.
+                " \ '-D__interrupt'
 
 "=====[ vim-multiple-cursors]===================================================
 " Called once right before you start selecting multiple cursors
@@ -322,7 +352,7 @@ let g:EasyMotion_smartcase = 1
 nmap <Leader>l <Plug>(easymotion-lineforward)
 nmap <Leader>j <Plug>(easymotion-j)
 nmap <Leader>k <Plug>(easymotion-k)
-nmap <Leader>h <Plug>(easymotion-linebackward)let
+nmap <Leader>h <Plug>(easymotion-linebackward)
 
 map <Leader> <Plug>(easymotion-prefix)
 
@@ -357,30 +387,33 @@ nnoremap <leader>nh :nohlsearch<CR>
 " let g:table_mode_header_fillchar="="
 " let g:table_mode_corner_corner="+"
 " let g:table_mode_header_fillchar="="
-
+let g:table_mode_corner = '|'
 "=====[ Confgiure the screen ]================================================
 syntax enable
-
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 " --- gruvbox
-"let g:gruvbox_improved_warnings = 1
-"let g:gruvbox_italic = 1
-"let g:gruvbox_contrast_dark = 'hard'
-"colorscheme gruvbox
-"
+" let g:gruvbox_improved_warnings = 1
+" let g:gruvbox_italic = 1
+" let g:gruvbox_contrast_dark = 'hard'
+" colorscheme gruvbox
+
 " --- solarized
 let g:solarized_italic=1
 let g:solarized_underline=1
 let g:solarized_bold=1
-let g:solarized_visibility= "high"
+" let g:solarized_visibility= "high"
 colorscheme solarized
-call togglebg#map("<F3>")
+" set background=dark
+" call togglebg#map("<F3>")
+" colorscheme wombat
 
-" set background=light
+" colorscheme OceanicNext
 set background=dark
+" set background=light
 
 "=====[ Generic Configurations ]================================================
 
-nnoremap <C-b> :wa <bar> :make!<cr>
+nnoremap <leader>b :wa <bar> :make!<cr>
 nnoremap <F4> :wa <bar> :make!<cr>
 nnoremap <F8> :NERDTreeToggle<CR>
 
