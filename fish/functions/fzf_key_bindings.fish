@@ -1,0 +1,1 @@
+/home/sporty/.fzf/shell/key-bindings.fish
