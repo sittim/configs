@@ -1,22 +1,19 @@
-call plug#begin('~/.config/nvim/plugged')
-
+call plug#begin('~/.vim/plugged')
 Plug 'Yggdroot/indentLine'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
+" Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
 " Plug 'oblitum/YouCompleteMe', { 'do': './install.py --clang-completer' }
-" Plug 'Rip-Rip/clang_complete'
-" Plug 'benekastah/neomake'
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+Plug 'j5shi/clang_complete'
 Plug 'ervandew/supertab'
-Plug 'bling/vim-airline'
+Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'altercation/vim-colors-solarized'
+Plug 'icymind/NeoSolarized' 
 Plug 'kopischke/unite-spell-suggest'
 Plug 'scrooloose/nerdcommenter'
-" ---------------  Nurdtree -------------------
 Plug 'scrooloose/nerdtree',            { 'on': 'NERDTreeToggle' }
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'Lokaltog/vim-easymotion'
@@ -33,27 +30,29 @@ Plug 'plasticboy/vim-markdown'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'dyng/ctrlsf.vim'
 Plug 'jaxbot/github-issues.vim'
-" Plug 'shougo/deoplete.nvim'
-" Plug 'zchee/deoplete-clang'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'mhartington/oceanic-next'
-Plug 'flazz/vim-colorschemes'
 Plug 'rhysd/vim-clang-format'
 Plug 'dhruvasagar/vim-table-mode'
-" Plug 'Rykka/InstantRst'
-" Plug 'Rykka/riv.vim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'edkolev/tmuxline.vim'
 Plug 'keith/tmux.vim'
 Plug 'kana/vim-operator-user'
 Plug 'idanarye/vim-smile'
-Plug 'jaxbot/semantic-highlight.vim'
-
+Plug 'dag/vim-fish'
+Plug 'mhartington/oceanic-next'
+Plug 'morhetz/gruvbox'
+Plug 'sickill/vim-monokai'
+Plug 'wannesm/wmgraphviz.vim'
+Plug 'jacoborus/tender.vim'
+Plug 'ryanoasis/vim-devicons'
+Plug 'JamshedVesuna/vim-markdown-preview'
 call plug#end()
 
-set shell=bash
+filetype plugin indent on " required
 
+set termguicolors
+set shell=bash
 set ttimeoutlen=50
 set re=1
 set hlsearch
@@ -72,6 +71,10 @@ set ruler
 set tags=tags;
 set expandtab
 " set t_Co=
+set path+=**
+
+set t_8f=[38;2;%lu;%lu;%lum
+set t_8b=[48;2;%lu;%lu;%lum
 
 noremap YY "+y<CR>
 noremap P "+gP<CR>
@@ -86,20 +89,19 @@ vmap > >gv
 nnoremap <silent> ]<Space> :<C-u>put =repeat(nr2char(10),v:count)<Bar>execute "'[-1"<CR>
 nnoremap <silent> [<Space> :<C-u>put!=repeat(nr2char(10),v:count)<Bar>execute "']+1"<CR>
 
+autocmd TextChanged,InsertLeave *.cpp,*.h silent! update
+autocmd BufNewFile,BufRead,BufEnter *.cpp,*.h set omnifunc=omni#cpp#complete#Main
+
+nnoremap <leader>b :wa <bar> :make!<cr>
+
 :set spelllang=en_us
 
 augroup VimSetColumns
     autocmd WinEnter * execute "set colorcolumn=" . join(range(81,255), ',')
     autocmd WinEnter * set cul 
     autocmd WinLeave * set colorcolumn=|set nocul
-    autocmd FileType cpp set tabstop=4|set synmaxcol=80|set expandtab
-augroup END
-
-augroup VimSaveConfigs
-    autocmd!
-    au Filetype cpp :au! TextChanged,InsertLeave,FocusLost,VimLeavePre <buffer> :update
-    autocmd TextChanged,InsertLeave,FocusLost,VimLeavePre *.md update
-    autocmd TextChanged,InsertLeave,FocusLost,VimLeavePre *.makefile update
+    autocmd FileType cpp set synmaxcol=80
+    autocmd FileType md set synmaxcol=300
 augroup END
 
 "=====[ vim-markdown ]========================================================
@@ -111,6 +113,10 @@ augroup END
 
 let g:vim_markdown_folding_disabled = 1
 let g:vim_markdown_conceal = 0
+
+"=====[ vim-markdown ]========================================================
+let vim_markdown_preview_hotkey='<C-m>'
+let vim_markdown_preview_github=1
 
 " =====[ VIM riv ]============================================================
 let g:riv_fold_auto_update=0
@@ -148,7 +154,7 @@ map gd :bd<cr>
 
 "=====[ Remap the Escap Key]====================================================
 :inoremap jk <Esc>
-:inoremap <esc> `
+" :inoremap <esc> `
 
 "=====[ vim-clang-format ]======================================================
     let g:clang_format#code_style='google'
@@ -156,12 +162,6 @@ map gd :bd<cr>
     let g:clang_format#style_options = {
                 \ "AccessModifierOffset" : -3,
                 \ "Standard" : "C++03"}
-
-augroup ClangFmt
-    autocmd!
-    autocmd BufWritePre *.cpp  ClangFormat
-    autocmd BufWritePre *.h  ClangFormat
-augroup END
 
 :nnoremap <leader>cf :ClangFormat<CR>
 
@@ -174,22 +174,26 @@ let g:ctrlsf_winsize = '82'
 let g:cpp_class_scope_highlight = 1
 
 "=====[ GitHub Issues ]=========================================================
+let g:github_access_token = "3e82225c127cca764242a0b7c14c8d67e3a33aa7"
 
 "=====[ NerdCommenter]==========================================================
 let g:NERDSpaceDelims=1
 
-"=====[ vim-tmux-navigator ]====================================================
-
 "=====[ NerdTree ]==============================================================
 let g:NERDTreeWinSize=26
+nnoremap <F8> :NERDTreeToggle<CR>
 
 "=====[ CtrlP ]================================================================
 " let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
-set wildignore+=*.so,*.swp,*.zip,*.o,*.a,*_test,*.prefs,.project,.cproject
-set wildignore+=.ccsproject,Test,Debug,Release
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-let g:ctrlp_user_command = 'ag %s -l -g ""'
+set wildignore+=*/build/*,*.so,*.swp,*.zip,*.o,*.a,*_test,*.prefs,.project,.cproject
+set wildignore+=.ccsproject,Test,Debug,Production,*.d
+let g:ctrlp_custom_ignore = {
+            \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+            \ 'file': '\v\.(exe|so|dll|o)$',
+            \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
+            \ }
+let g:ctrlp_user_command = 'ag --ignore={build,.git,.project,*.o,*.d} %s -l --hidden -g ""'
 let g:ctrlp_use_caching = 0
 let g:ctrlp_switch_buffer=0
 
@@ -207,127 +211,62 @@ nnoremap <silent> <M-S-p> :History<cr>
 " Use fuzzy completion relative filepaths across directory
 imap <expr> <c-x><c-f> fzf#vim#complete#path('git ls-files $(git rev-parse --show-toplevel)')
 
-" =====[ Neomake Config ]=======================================================
-" let g:neomake_cpp_clang_maker = {
-    " \ 'args': ['-fsyntax-only','-std=c++03','-Wall','-Wextra', '-I.']
-    " \}
-" let g:neomake_cpp_enabled_makers = ['clang']
-
-" let g:neomake_cpp_cpplint_maker = {
-            " \ 'exe': 'cpplint'
-            " \ }
-" let g:neomake_cpp_enabled_makers = ['cpplint']
-" let g:neomake_java_enabled_makers = ['javac']
-
-" augroup Nmake
-    " autocmd!
-    " au Filetype cpp :au TextChanged,InsertLeave,VimEnter <buffer> :Neomake
-    " " autocmd TextChanged,FocusLost,InsertLeave,VimEnter *.h  Neomake
-" augroup END
-
-"=====[ airline configuration ]===============================================
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#branch#enabled = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
-
-"=====[ ultisnips ]===========================================================
-let g:UltiSnipsExpandTrigger="<c-e>"
-let g:UltiSnipsJumpForwardTrigger="<c-a>"
-let g:UltiSnipsJumpBackwardTrigger="<c-b>"
-
 "=====[ vim-cpp-enhanced-highlight ]==========================================
 let g:cpp_class_scope_highlight = 1
 
 "=====[ YouCompleteMe Configurations ]========================================
-" let g:ycm_min_num_of_chars_for_completion = 99
-" let g:ycm_autoclose_preview_window_after_completion = 1
-" let g:ycm_autoclose_preview_window_after_insertion = 0
-let g:ycm_key_list_select_completion = ['<TAB>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
-let g:ycm_key_invoke_completion = '<C-Space>'
-let g:ycm_confirm_extra_conf = 0  " asks if OK to load .ycm_confing.py
+" let g:ycm_autoclose_preview_window_after_insertion = 1
+" let g:ycm_confirm_extra_conf = 0  " asks if OK to load .ycm_confing.py
+" let g:ycm_use_ultisnips_completer = 1
+" let g:ycm_auto_trigger = 1
+" let g:ycm_key_detailed_diagnostics = '<leader>d'
+" nnoremap <leader>jd :YcmCompleter GoTo<CR>
+" nnoremap <leader>y :YcmForceCompileAndDiagnostics<CR><CR>
+" let g:ycm_error_symbol = ''
+" let g:ycm_warning_symbol = ''
+" set wildignore+=*/tmp/*,*.so,*.swp,*.zip
 
-let g:ycm_auto_trigger = 1
-let g:ycm_key_detailed_diagnostics = '<leader>d'
-let g:ycm_filepath_completion_use_working_dir = 1
-nnoremap <leader>jd :YcmCompleter GoTo<CR>
-nnoremap <leader>y :YcmForceCompileAndDiagnostics<CR><CR>
-"let g:ycm_show_diagnostics_ui = 0
+"=====[ airline configuration ]=================================================
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#branch#enabled = 1
 
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+"=====[ supertab ]==============================================================
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
-"=====[ clang-completen ]=======================================================
-" " let g:clang_auto_select = 0 " 0/1/2 auto select first entry in popup menu
-" " let g:clang_complete_auto = 0 " auto complete after -> . ::
-" let g:clang_complete_copen = 1 " 1: open quickfix window on error
-" let g:clang_hl_errors = 1 " highlight warnings and errors
-" let g:clang_periodic_quickfix = 0 " periodically update quickfix
-" " you can use g:ClangUpdateQuickFix() with a mapping to do this
-" let g:clang_snippets = 1
-" " clang_complete, snipmate, ultisnips
-" let g:clang_snippets_engine = "ultisnips"
-" let g:clang_conceal_snippets = 1
-" let g:clang_trailing_placeholder = 0 " for clang_complete snippet engine
-" let g:clang_close_preview = 0 " auto close preview window after completion
-" let g:clang_exec = "clang" " name or path of clang executable.
-" " let g:clang_user_options = '-std=gnu++0x -include malloc.h -fms-extensions -fgnu-runtime'
-" " let g:clang_user_options = '-std=c++11 -stdlib=libc++'
-" let g:clang_use_library = 1
-" let g:clang_library_path = "/usr/lib/"
-" let g:clang_sort_algo = "priority"
-" let g:clang_complete_macros = 1
-" let g:clang_complete_patterns = 1
-" let g:clang_library_path="/usr/lib/llvm-3.8/lib" 
-" let g:clang_user_options =
-                " \ '-std=c++03' .
-                " \ '-isystem /usr/local/include'.
-                " \ '-isystem /usr/include'.
-                " \ '-isystem /usr/include/c++/4.9'.
-                " \ '-isystem /usr/include/x86_64-linux-gnu/c++/4.9'.
-                " \ '-isystem /usr/include/c++/4.9/backward'.
-                " \ '-isystem /home/sporty/work/googletest/googletest/include'.
-                " \ '-isystem /home/sporty/work/googletest/googlemock/include'.
-                " \ '-isystem /home/sporty/ti/ccsv6/ccs_base/msp430/include'.
-                " \ '-I .'.
-                " \ '-g'.
-                " \ '-Wall'.
-                " \ '-Wextra'.
-                " \ '-Werror'.
-                " \ '-fsyntax-only'.
-                " \ '-pthread'.
-                " \ '-Wno-unknown-pragmas'.
-                " \ '-DDEBUG'.
-                " \ '-DTEST'.
-                " \ '-D_BIC_SR(x)='.
-                " \ '-D_BIS_SR(x)='.
-                " \ '-D__MSP430F5335__'.
-                " \ '-D__interrupt'
+"=====[ ultisnips ]=============================================================
+"let loaded_supertab = 1                                    " Uncomment the this line to disable the plugin
+let g:SuperTabDefaultCompletionType='<c-x><c-u>'            " 'user' defined default completion type
+let g:SuperTabDefaultCompletionType = 'context'             " 'context' defined default completion type
+let g:SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
+let g:SuperTabLongestHighlight=1
+let g:SuperTabLongestEnhanced=1
 
-"=====[ vim-multiple-cursors]===================================================
-" Called once right before you start selecting multiple cursors
-function! Multiple_cursors_before()
-    call youcompleteme#DisableCursorMovedAutocommands()
-    let g:ycm_auto_trigger = 99
-    augroup VimSaveConfigs
-        autocmd!
-    augroup END
-endfunction
+"=====[ clang_complete configurations ]=========================================
+set complete-=t                                             " Do not search tag files when auto-completing
+set complete-=i                                             " Do not search include files when auto-completing
+set completeopt=menu,menuone                                " Complete options (disable preview scratch window, longest removed to aways show menu)
+set pumheight=20                                            " Limit popup menu height
+set concealcursor=inv                                       " Conceal in insert (i), normal (n) and visual (v) modes
+set conceallevel=2                                          " Hide concealed text completely unless replacement character is defined
+let g:clang_use_library = 1                                 " Use libclang directly
+let g:clang_library_path='/usr/lib/llvm-3.8/lib'            " Path to the libclang on the system
+let g:clang_complete_auto = 1                               " Run autocompletion immediatelly after ->, ., ::
+let g:clang_complete_copen = 1                              " Open quickfix window on error
+let g:clang_periodic_quickfix = 0                           " Turn-off periodic updating of quickfix window (g:ClangUpdateQuickFix() does the same)
+let g:clang_snippets = 1                                    " Enable function args autocompletion, template parameters, ...
+let g:clang_snippets_engine = 'ultisnips'                   " Use UltiSnips engine for function args autocompletion (provides mechanism to jump over to the next argument)
+"let g:clang_snippets_engine = 'clang_complete'             " Use clang_complete engine for function args autocompletion
+let g:clang_conceal_snippets = 1                            " clang_complete engine related setting
+"let g:clang_trailing_placeholder = 1                       " clang_complete engine related setting
+"let g:clang_hl_errors = 0                                  " Turn-off error highlighting
+"let g:clang_complete_patterns = 1                          " (Does not work for me) Turn-on autocompletion for language constructs (i.e. loops)
+"let g:clang_complete_macros = 1
+"let g:clang_user_options='|| exit 0'                       " Avoid freezing on offending code
+let g:clang_auto_select=1                                   " automatically select and insert the first match
 
-" Called once only when the multiple selection is canceled (default <Esc>)
-function! Multiple_cursors_after()
-    let g:ycm_auto_trigger = 1
-    call youcompleteme#EnableCursorMovedAutocommands()
-    augroup VimSaveConfigs
-        autocmd!
-        au Filetype cpp :au! TextChanged,InsertLeave,FocusLost,VimLeavePre <buffer> :update
-        autocmd TextChanged,InsertLeave,FocusLost,VimLeavePre *.md update
-        autocmd TextChanged,InsertLeave,FocusLost,VimLeavePre *.makefile update
-    augroup END
-endfunction
-
-"=====[ easy motion ]===-======================================================
+"=====[ easy motion ]===========================================================
 nmap s <Plug>(easymotion-s2)
 
 " Turn on case insensitive feature
@@ -346,119 +285,27 @@ omap / <Plug>(easymotion-tn)
 
 nnoremap <leader>nh :nohlsearch<CR>
 
-"=====[deoplete]==============================================================
-" let g:deoplete#enable_at_startup = 1
-" let g:deoplete#sources#clang#libclang_path='/usr/lib/llvm-3.7/lib/libclang.so'
-" let g:deoplete#sources#clang#clang_header='/usr/lib/llvm-3.7/lib/clang'
-" let g:deoplete#sources#clang#std='c++03'
-" let g:deoplete#sources#clang#flags=['-g','-Wall','-Wextra','-Werror',
-    " \'-fsyntax-only','-pthread','-Wno-unknown-pragmas','-DDEBUG',
-    " \'-D_BIC_SR(x)=','-D_BIS_SR(x)=','-DUSE_CLANG_COMPLETER','-std=c++03',
-    " \'-x','c++',
-    " \'-isystem', '/usr/local/include',
-    " \'-isystem','/usr/include/x86_64-linux-gnu',
-    " \'-isystem','/usr/include',
-    " \'-isystem', '/usr/include/c++/4.9',
-    " \'-isystem','/usr/include/x86_64-linux-gnu/c++/4.9',
-    " \'-isystem','/usr/include/c++/4.9/backward',
-    " \'-isystem','/usr/lib/llvm-3.6/lib/clang/3.6.2/include',
-    " \'-isystem','/home/sporty/work/googletest/googletest/include',
-    " \'-isystem','/home/sporty/work/googletest/googlemock/include',
-    " \'-isystem','/home/sporty/ti/ccsv6/ccs_base/msp430/include'
-    " \]
-
 "=====[ vim-table-mode ]======================================================
-" let g:table_mode_corner="+"
-" let g:table_mode_corner_corner="+"
-" let g:table_mode_header_fillchar="="
-" let g:table_mode_corner_corner="+"
-" let g:table_mode_header_fillchar="="
 let g:table_mode_corner = '|'
+
 "=====[ Confgiure the screen ]================================================
 syntax enable
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 " --- gruvbox
 " let g:gruvbox_improved_warnings = 1
 " let g:gruvbox_italic = 1
 " let g:gruvbox_contrast_dark = 'hard'
 " colorscheme gruvbox
 
-" --- solarized
-let g:solarized_italic=1
-let g:solarized_underline=1
-let g:solarized_bold=1
-let g:solarized_visibility= "high"
-colorscheme solarized
-set background=dark
-call togglebg#map("<F3>")
-" colorscheme wombat
+" colorscheme NeoSolarized
+" let g:neosolarized_bold = 1
+" let g:neosolarized_underline = 1
+" let g:neosolarized_italic = 0
 
-" colorscheme OceanicNext
+" ----- OceanicNext
+let g:colors_name="OceanicNext"
+colorscheme OceanicNext
+" let g:oceanic_next_terminal_bold = 0
+
 " set background=light
+" set background=dark
 
-"=====[ Generic Configurations ]================================================
-
-nnoremap <leader>b :wa <bar> :make!<cr>
-nnoremap <F4> :wa <bar> :make!<cr>
-nnoremap <F8> :NERDTreeToggle<CR>
-
-augroup BgHighlight
-    autocmd!
-    autocmd BufReadPost quickfix map <buffer> <leader>qq :cclose<cr>
-    autocmd  BufRead,BufNewFile  *.cpp
-        \ let &l:makeprg
-        \ = 'make -f '.fnameescape(
-            \substitute(expand('%'), '\m_test\.cpp$', '.makefile', ''))
-augroup END
-
-
-"Rename tabs to show tab# and # of viewports
-if exists("+showtabline")
-    function! MyTabLine()
-        let s = ''
-        let wn = ''
-        let t = tabpagenr()
-        let i = 1
-        while i <= tabpagenr('$')
-            let buflist = tabpagebuflist(i)
-            let winnr = tabpagewinnr(i)
-            let s .= '%' . i . 'T'
-            let s .= (i == t ? '%1*' : '%2*')
-            let s .= ' '
-            let wn = tabpagewinnr(i,'$')
-
-            let s .= (i== t ? '%#TabNumSel#' : '%#TabNum#')
-            let s .= i
-            if tabpagewinnr(i,'$') > 1
-                let s .= '.'
-                let s .= (i== t ? '%#TabWinNumSel#' : '%#TabWinNum#')
-                let s .= (tabpagewinnr(i,'$') > 1 ? wn : '')
-            end
-
-            let s .= ' %*'
-            let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
-            let bufnr = buflist[winnr - 1]
-            let file = bufname(bufnr)
-            let buftype = getbufvar(bufnr, 'buftype')
-            if buftype == 'nofile'
-                if file =~ '\/.'
-                    let file = substitute(file, '.*\/\ze.', '', '')
-                endif
-            else
-                let file = fnamemodify(file, ':p:t')
-            endif
-            if file == ''
-                let file = '[No Name]'
-            endif
-            let s .= file
-            let s .= (i == t ? '%m' : '')
-            let i = i + 1
-        endwhile
-        let s .= '%T%#TabLineFill#%='
-        return s
-    endfunction
-    set stal=2
-    set tabline=%!MyTabLine()
-endif
-
-autocmd BufRead,BufNewFile *.dlog set filetype=dlog

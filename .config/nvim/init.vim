@@ -7,6 +7,8 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 " Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
 Plug 'oblitum/YouCompleteMe', { 'do': './install.py --clang-completer' }
+" Plug 'Rip-Rip/clang_complete'
+" Plug 'ervandew/supertab'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -31,26 +33,32 @@ Plug 'dyng/ctrlsf.vim'
 Plug 'jaxbot/github-issues.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'flazz/vim-colorschemes'
 Plug 'rhysd/vim-clang-format'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'edkolev/tmuxline.vim'
 Plug 'keith/tmux.vim'
 Plug 'kana/vim-operator-user'
-Plug 'idanarye/vim-smile'
 Plug 'dag/vim-fish'
-Plug 'mhartington/oceanic-next'
-Plug 'sickill/vim-monokai'
 Plug 'wannesm/wmgraphviz.vim'
-Plug 'endel/vim-github-colorscheme'
-Plug 'jacoborus/tender.vim'
 Plug 'ryanoasis/vim-devicons'
 Plug 'JamshedVesuna/vim-markdown-preview'
+" Plug 'vim-scripts/ShowMarks'
+" Plug 'zakj/vim-showmarks'
+Plug 'kshenoy/vim-signature'
+Plug 'mhinz/vim-startify'
+
+" Themes
+Plug 'mhartington/oceanic-next'
+Plug 'sickill/vim-monokai'
+Plug 'morhetz/gruvbox'
+Plug 'tomasr/molokai'
+Plug 'whatyouhide/vim-gotham'
+Plug 'jacoborus/tender.vim'
 
 call plug#end()
 
-filetype plugin indent on " required
+" filetype plugin indent on " required
 set termguicolors
 set shell=bash
 
@@ -71,7 +79,6 @@ set number
 set ruler
 set tags=tags;
 set expandtab
-" set t_Co=
 set path+=**
 
 set t_8f=[38;2;%lu;%lu;%lum
@@ -87,10 +94,13 @@ vmap > >gv
 
 :nnoremap <Space> i_<Esc>r
 
-nnoremap <silent> ]<Spac_e> :<C-u>put =repeat(nr2char(10),v:count)<Bar>execute "'[-1"<CR>
-nnoremap <silent> [<Space> :<C-u>put!=repeat(nr2char(10),v:count)<Bar>execute "']+1"<CR>
+:nnoremap <silent> ]<Space> :<C-u>put =repeat(nr2char(10),v:count)<Bar>execute "'[-1"<CR>
+:nnoremap <silent> [<Space> :<C-u>put!=repeat(nr2char(10),v:count)<Bar>execute "']+1"<CR>
 
 autocmd TextChanged,InsertLeave *.cpp,*.h silent! update
+
+autocmd BufReadPost,BufNewFile *.cpp,*.h set nowrap 
+" autocmd BufReadPost,WinEnter *.cpp,*.h vertical resize 84
 
 :set spelllang=en_us
 
@@ -130,11 +140,9 @@ set relativenumber
 set formatoptions=tcq
 
 ""=====[ Indent Guidelines ]===================================================
-let g:indent_guides_auto_colors = 0
-let g:indentLine_enabled = 1
-" let g:indentLine_char = '┆'
-let g:indentLine_faster = 1
-let g:indentLine_concealcursor = 0
+" let g:indent_guides_auto_colors=1
+" let g:indentLine_setColors=0
+let g:indentLine_color_gui = '#444444'
 
 "=====[ Remap Leader Key ]======================================================
 let mapleader = ","
@@ -178,6 +186,7 @@ let g:NERDSpaceDelims=1
 
 "=====[ NerdTree ]==============================================================
 let g:NERDTreeWinSize=26
+nnoremap <F8> :NERDTreeToggle<CR>
 
 "=====[ CtrlP ]================================================================
 " let g:ctrlp_cmd = 'CtrlP'
@@ -189,7 +198,7 @@ let g:ctrlp_custom_ignore = {
             \ 'file': '\v\.(exe|so|dll|o)$',
             \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
             \ }
-let g:ctrlp_user_command = 'ag --ignore={build,*.o} %s -l --hidden -g ""'
+let g:ctrlp_user_command = 'ag --ignore={build,.git,.project,*.o,*.d} %s -l --hidden -g ""'
 let g:ctrlp_use_caching = 0
 let g:ctrlp_switch_buffer=0
 
@@ -207,14 +216,13 @@ nnoremap <silent> <M-S-p> :History<cr>
 " Use fuzzy completion relative filepaths across directory
 imap <expr> <c-x><c-f> fzf#vim#complete#path('git ls-files $(git rev-parse --show-toplevel)')
 
-
 "=====[ airline configuration ]===============================================
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#branch#enabled = 1
 
 "=====[ ultisnips ]===========================================================
 let g:UltiSnipsExpandTrigger="<c-e>"
-let g:UltiSnipsJumpForwardTrigger="<c-a>"
+let g:UltiSnipsJumpForwardTrigger="<c-e>"
 let g:UltiSnipsJumpBackwardTrigger="<c-b>"
 
 "=====[ vim-cpp-enhanced-highlight ]==========================================
@@ -230,35 +238,19 @@ nnoremap <leader>jd :YcmCompleter GoTo<CR>
 nnoremap <leader>y :YcmForceCompileAndDiagnostics<CR><CR>
 let g:ycm_error_symbol = ''
 let g:ycm_warning_symbol = ''
-
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip
 
-"=====[ vim-multiple-cursors]===================================================
-" Called once right before you start selecting multiple cursors
-function! Multiple_cursors_before()
-    " call youcompleteme#DisableCursorMovedAutocommands()
-    " let g:ycm_auto_trigger = 99
-    augroup VimSaveConfigs
-        autocmd!
-    augroup END
-endfunction
-
-" Called once only when the multiple selection is canceled (default <Esc>)
-function! Multiple_cursors_after()
-    " let g:ycm_auto_trigger = 1
-    " call youcompleteme#EnableCursorMovedAutocommands()
-    augroup VimSaveConfigs
-        autocmd!
-        au Filetype cpp :au! TextChanged,InsertLeave,FocusLost,VimLeavePre <buffer> :update
-        autocmd TextChanged,InsertLeave,FocusLost,VimLeavePre *.md update
-        autocmd TextChanged,InsertLeave,FocusLost,VimLeavePre *.makefile update
-    augroup END
-endfunction
+"=====[ clang_complete Configurations ]========================================
+" let g:clang_library_path='/usr/lib/llvm-3.8/lib'
+" let g:clang_snippets=1       " use a snippet engine for placeholders
+" let g:clang_snippets_engine='ultisnips'
+" let g:clang_auto_select=1    " automatically select and insert the first match
+" let g:clang_complete_optional_args_in_snippets=1
 
 "=====[ easy motion ]===-======================================================
 nmap s <Plug>(easymotion-s2)
 
-" Turn on case insensitive feature
+    " Turn on case insensitive feature
 let g:EasyMotion_smartcase = 1
 
 " JK motions: Line motions
@@ -267,59 +259,57 @@ nmap <Leader>j <Plug>(easymotion-j)
 nmap <Leader>k <Plug>(easymotion-k)
 nmap <Leader>h <Plug>(easymotion-linebackward)
 
-map <Leader> <Plug>(easymotion-prefix)
+" map <Leader> <Plug>(easymotion-prefix)
 
 map  / <Plug>(easymotion-sn)
 omap / <Plug>(easymotion-tn)
 
 nnoremap <leader>nh :nohlsearch<CR>
 
-"=====[ vim-table-mode ]======================================================
-" let g:table_mode_corner="+"
-" let g:table_mode_corner_corner="+"
-" let g:table_mode_header_fillchar="="
-" let g:table_mode_corner_corner="+"
-" let g:table_mode_header_fillchar="="
+"=====[ vim-table-mode ]=======================================================
 let g:table_mode_corner = '|'
 
-"=====[ Confgiure the screen ]================================================
+"=====[ ShowMarks ]============================================================
+" let g:showmarks_enable = 1
+" let g:showmarks_include = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+" Ignore help, quickfix, non-modifiable buffers
+" let g:showmarks_ignore_type = "hqm"
+let g:SignatureMarkerTextHL=1
+
+"=====[ Confgiure the screen ]=================================================
 syntax enable
 " --- gruvbox
 " let g:gruvbox_improved_warnings = 1
 " let g:gruvbox_italic = 1
-" let g:gruvbox_contrast_dark = 'hard'
+" let g:gruvbox_bold = 0
+" let g:airline_theme='gruvbox'
 " colorscheme gruvbox
 
-" colorscheme wombat
-" colorscheme github
-" colorscheme monokai
-" colorscheme tender
-
-" ----- Solarized
-colorscheme NeoSolarized
+" colorscheme NeoSolarized
 let g:neosolarized_bold = 1
 let g:neosolarized_underline = 1
-let g:neosolarized_italic = 1
+let g:neosolarized_italic = 0
+let g:indent_guides_auto_colors = 0
+let g:indentLine_enabled = 1
+let g:indentLine_faster = 1
+let g:indentLine_concealcursor = 0
+colorscheme NeoSolarized
+set background=light
 
 " ----- OceanicNext
+" let g:oceanic_next_terminal_bold=0
+" let g:oceanic_next_terminal_italic=0
 " colorscheme OceanicNext
-" let g:oceanic_next_terminal_bold = 0
+" colorscheme gotham
+
+" let g:colors_name="molokai"
+" let g:colors_name="gotham"
+
 
 " set background=light
-set background=dark
+" set background=dark
 
-"=====[ Generic Configurations ]================================================
+:nnoremap <leader>b :wa <bar> :make!<cr>
 
-nnoremap <leader>b :wa <bar> :make!<cr>
-nnoremap <F4> :wa <bar> :make!<cr>
-nnoremap <F8> :NERDTreeToggle<CR>
-
-augroup BgHighlight
-    autocmd!
-    autocmd BufReadPost quickfix map <buffer> <leader>qq :cclose<cr>
-    autocmd  BufRead,BufNewFile  *.cpp
-        \ let &l:makeprg
-        \ = 'make -f '.fnameescape(
-            \substitute(expand('%'), '\m_test\.cpp$', '.makefile', ''))
-augroup END
 

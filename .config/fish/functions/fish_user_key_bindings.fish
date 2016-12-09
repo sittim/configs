@@ -22,7 +22,8 @@ function fw
 end
 
 function mone
-    "xrandr --output eDP1 --off"
+    xrandr --output eDP1 --off
+    feh --bg-scale ~/Pictures/IMG_9057_screen.JPG
 end
 
 function moni
@@ -43,4 +44,12 @@ function fcd
     else
         open $PWD
     end
+end
+
+function stg
+    ssh receiver@mueller.23stages.com
+end
+
+function prod
+    ssh receiver@miwt.net
 end
