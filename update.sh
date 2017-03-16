@@ -7,3 +7,4 @@ cp ~/.tmux.conf .
 cp ~/.config/nvim/init.vim .config/nvim/
 cp -r ~/.config/i3 .config/
 cp -r ~/.config/fish .config/
+cp -r ~/st .

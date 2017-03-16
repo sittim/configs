@@ -5,14 +5,13 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
-" Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
-Plug 'oblitum/YouCompleteMe', { 'do': './install.py --clang-completer' }
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --clang-completer' }
+" Plug 'oblitum/YouCompleteMe', { 'do': './install.py --clang-completer' }
 " Plug 'Rip-Rip/clang_complete'
 " Plug 'ervandew/supertab'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'icymind/NeoSolarized' 
 Plug 'kopischke/unite-spell-suggest'
 Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree',            { 'on': 'NERDTreeToggle' }
@@ -47,6 +46,7 @@ Plug 'JamshedVesuna/vim-markdown-preview'
 " Plug 'zakj/vim-showmarks'
 Plug 'kshenoy/vim-signature'
 Plug 'mhinz/vim-startify'
+Plug 'jvirtanen/vim-octave'
 
 " Themes
 Plug 'mhartington/oceanic-next'
@@ -54,7 +54,13 @@ Plug 'sickill/vim-monokai'
 Plug 'morhetz/gruvbox'
 Plug 'tomasr/molokai'
 Plug 'whatyouhide/vim-gotham'
-Plug 'jacoborus/tender.vim'
+Plug 'joshdick/onedark.vim'
+Plug 'icymind/NeoSolarized' 
+Plug 'rakr/vim-one'
+Plug 'slim-template/vim-slim'
+
+"Rails
+Plug 'tpope/vim-rails'
 
 call plug#end()
 
@@ -108,8 +114,9 @@ augroup VimSetColumns
     autocmd WinEnter * execute "set colorcolumn=" . join(range(81,255), ',')
     autocmd WinEnter * set cul 
     autocmd WinLeave * set colorcolumn=|set nocul
-    autocmd FileType cpp set synmaxcol=80
+    autocmd FileType cpp set synmaxcol=81
     autocmd FileType md set synmaxcol=300
+    autocmd FileType rb set synmaxcol=300
 augroup END
 
 "=====[ vim-markdown ]========================================================
@@ -142,7 +149,7 @@ set formatoptions=tcq
 ""=====[ Indent Guidelines ]===================================================
 " let g:indent_guides_auto_colors=1
 " let g:indentLine_setColors=0
-let g:indentLine_color_gui = '#444444'
+" let g:indentLine_color_gui = '#666666'
 
 "=====[ Remap Leader Key ]======================================================
 let mapleader = ","
@@ -175,11 +182,13 @@ map gd :bd<cr>
 let g:ctrlsf_auto_close = 0
 let g:ctrlsf_ignore_dir = ['.git']
 let g:ctrlsf_winsize = '82'
+let g:ctrlsf_default_root = 'project'
 
 " "=====[ cpp enhanced highlight ]==============================================
 let g:cpp_class_scope_highlight = 1
 
 "=====[ GitHub Issues ]=========================================================
+let g:github_access_token = "3e82225c127cca764242a0b7c14c8d67e3a33aa7"
 
 "=====[ NerdCommenter]==========================================================
 let g:NERDSpaceDelims=1
@@ -193,11 +202,6 @@ nnoremap <F8> :NERDTreeToggle<CR>
 let g:ctrlp_working_path_mode = 'ra'
 set wildignore+=*/build/*,*.so,*.swp,*.zip,*.o,*.a,*_test,*.prefs,.project,.cproject
 set wildignore+=.ccsproject,Test,Debug,Production,*.d
-let g:ctrlp_custom_ignore = {
-            \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-            \ 'file': '\v\.(exe|so|dll|o)$',
-            \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
-            \ }
 let g:ctrlp_user_command = 'ag --ignore={build,.git,.project,*.o,*.d} %s -l --hidden -g ""'
 let g:ctrlp_use_caching = 0
 let g:ctrlp_switch_buffer=0
@@ -278,34 +282,42 @@ let g:table_mode_corner = '|'
 let g:SignatureMarkerTextHL=1
 
 "=====[ Confgiure the screen ]=================================================
-syntax enable
+" syntax enable
+" colorscheme one
+" let g:airline_theme='one'
+" set background=dark
+
 " --- gruvbox
 " let g:gruvbox_improved_warnings = 1
 " let g:gruvbox_italic = 1
 " let g:gruvbox_bold = 0
 " let g:airline_theme='gruvbox'
 " colorscheme gruvbox
+" set background=dark
 
 " colorscheme NeoSolarized
-let g:neosolarized_bold = 1
-let g:neosolarized_underline = 1
-let g:neosolarized_italic = 0
-let g:indent_guides_auto_colors = 0
-let g:indentLine_enabled = 1
-let g:indentLine_faster = 1
-let g:indentLine_concealcursor = 0
-colorscheme NeoSolarized
-set background=light
+" let g:neosolarized_bold = 1
+" let g:neosolarized_underline = 1
+" let g:neosolarized_italic = 0
+" let g:indent_guides_auto_colors = 0
+" let g:indentLine_enabled = 1
+" let g:indentLine_faster = 1
+" let g:indentLine_concealcursor = 0
+" colorscheme NeoSolarized
 
 " ----- OceanicNext
 " let g:oceanic_next_terminal_bold=0
 " let g:oceanic_next_terminal_italic=0
+" let g:indentLine_color_gui = '#666666'
 " colorscheme OceanicNext
-" colorscheme gotham
 
-" let g:colors_name="molokai"
-" let g:colors_name="gotham"
+" let g:indentLine_color_gui = '#444444'
+" colorscheme onedark
 
+let g:indentLine_color_gui = '#444444'
+colorscheme gotham
+"
+" colorscheme tender
 
 " set background=light
 " set background=dark
